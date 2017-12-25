@@ -1,0 +1,16 @@
+{
+  "name": "dack-cnm-2017",
+  "version": "1.0.0",
+  "description": "Do an cuoi ky mon Cac cong nghe moi trong phat trien phan mem",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.7"
+  }
+}
