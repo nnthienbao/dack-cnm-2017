@@ -6,24 +6,25 @@ import Recaptcha from 'react-grecaptcha';
 const Register = (props) => {
     return (
         <div className="col-lg-6 bg-white">
-            <div className="form d-flex align-items-center">
+            <h2 className="page-header">REGISTER</h2>
+            <div className="form align-items-center">
                 <div className="content">
                     <form id="register-form">
                         <div className="form-group">
-                            <label htmlFor="register-username">User Name</label>
-                            <input id="register-username" type="text" name="registerUsername" required className="input-material"/>
+                            <label htmlFor="register-username" className="form-control-label">User Name</label>
+                            <input id="register-username" type="text" name="registerUsername" required className="form-control"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="register-email" className="label-material">Email Address</label>
-                            <input id="register-email" type="email" name="registerEmail" required className="input-material"/>
+                            <label htmlFor="register-email" className="form-control-label">Email Address</label>
+                            <input id="register-email" type="email" name="registerEmail" required className="form-control"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="register-passowrd" className="label-material">Password</label>
-                            <input id="register-passowrd" type="password" name="registerPassword" required className="input-material"/>
+                            <label htmlFor="register-passowrd" className="form-control-label">Password</label>
+                            <input id="register-passowrd" type="password" name="registerPassword" required className="form-control"/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="register-repassowrd" className="label-material">Re password</label>
-                            <input id="register-repassowrd" type="password" name="registerPassword" required className="input-material"/>
+                            <label htmlFor="register-repassowrd" className="form-control-label">Re password</label>
+                            <input id="register-repassowrd" type="password" name="registerPassword" required className="form-control"/>
                         </div>
                         <div className="form-group terms-conditions">
                             <input id="license" type="checkbox" className="checkbox-template"/>

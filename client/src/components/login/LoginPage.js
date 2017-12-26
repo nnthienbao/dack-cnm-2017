@@ -2,6 +2,7 @@ import React from 'react';
 import {Route} from 'react-router-dom';
 import Login from "./Login";
 import Register from "./Register";
+import ForgotPassword from "./ForgotPassword";
 
 const LoginPage = (props) => (
     <div>
@@ -16,13 +17,14 @@ const LoginPage = (props) => (
                                     <div className="logo">
                                         <h1>KCOIN</h1>
                                     </div>
-                                    <p>Cơ hội x10, x100 số tiền hiện tại của bạn</p>
+                                    <p>KCoin is a cryptocurrency and worldwide payment system</p>
                                 </div>
                             </div>
                         </div>
                         {/*Form Panel*/}
                         <Route path="/login" component={Login}/>
                         <Route path="/register" component={Register}/>
+                        <Route path="/forgot-password" component={ForgotPassword}/>
                     </div>
                 </div>
             </div>
