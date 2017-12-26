@@ -1,6 +1,9 @@
 # IDE
 .idea
 
+# Template
+template
+
 # Logs
 logs
 *.log
