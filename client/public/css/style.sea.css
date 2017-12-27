@@ -463,17 +463,17 @@ nav.side-navbar ul li li a {
   background: #EEF5F9;
 }
 
-nav.side-navbar ul li.active > a {
+nav.side-navbar ul li > a.active  {
   background: #379392;
   color: #fff;
   border-left: 4px solid #225b5b;
 }
 
-nav.side-navbar ul li.active > a:hover {
+nav.side-navbar ul li  > a.active:hover {
   background: #379392;
 }
 
-nav.side-navbar ul li li.active > a {
+nav.side-navbar ul li li > a.active  {
   background: #3ea6a4;
 }
 
