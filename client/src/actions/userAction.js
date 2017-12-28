@@ -1,7 +1,7 @@
+import axios from 'axios';
 
-export function register(user) {
-    return {
-        action: 'REGISTER',
-        user: user
+export function userRegisterRequest(user) {
+    return dispatch => {
+        axios.post('/api/register', user)
     }
 }

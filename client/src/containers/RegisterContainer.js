@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Register from '../components/login/Register';
+import { userRegisterRequest } from '../actions/userAction';
 
 class RegisterContainer extends React.Component {
     constructor(props) {
@@ -53,4 +55,4 @@ RegisterContainer.propTypes = {
     userRegisterRequest: PropTypes.func.isRequired
 }
 
-export default RegisterContainer;
+export default connect((state)=>{return {}}, { userRegisterRequest })(RegisterContainer);
