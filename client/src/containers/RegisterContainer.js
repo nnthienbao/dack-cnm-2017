@@ -13,7 +13,9 @@ class RegisterContainer extends React.Component {
             email: '',
             password: '',
             repassword: '',
-            agreeLicense: false
+            agreeLicense: false,
+            errors: {},
+            isLoading: false
         };
 
         this.onChange = this.onChange.bind(this);
@@ -33,7 +35,13 @@ class RegisterContainer extends React.Component {
 
     onSubmit(e) {
         e.preventDefault();
-        this.props.userRegisterRequest(this.state);
+        this.setState({
+            errors: {},
+            isLoading: true
+        });
+        this.props.userRegisterRequest(this.state)
+            .then(() => {})
+            .catch((error) => this.setState({errors: error.response.data, isLoading: false}));
     }
 
     render() {
@@ -44,6 +52,8 @@ class RegisterContainer extends React.Component {
                 password={this.state.password}
                 repassword={this.state.repassword}
                 agreeLicense={this.state.agreeLicense}
+                errors={this.state.errors}
+                isLoading={this.state.isLoading}
                 onChange={this.onChange}
                 onSubmit={this.onSubmit}
             />
