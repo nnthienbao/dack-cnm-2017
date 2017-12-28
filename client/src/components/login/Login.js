@@ -23,10 +23,12 @@ const Login = (props) => {
                             <input id="login-2fa-code" type="text" name="login-2fa-code" required="" className="form-control"/>
                         </div>
                         <Recaptcha
+                            callback={()=>{}}
+                            expiredCallback={()=>{}}
                             sitekey="6Lf8aj4UAAAAAAI1X6wFypJkr6PeBfd0FX38XUTO"
                             className="g-recaptcha"
                         />
-                        <a id="login" href="#" className="btn btn-primary">Login</a>
+                        <a id="login" className="btn btn-primary">Login</a>
                         {/*This should be submit button but I replaced it with <a> for demo purposes*/}
                     </form>
                     <Link className="forgot-pass" to="/forgot-password">Forgot Password?</Link>

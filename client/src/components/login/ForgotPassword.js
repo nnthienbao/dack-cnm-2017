@@ -17,7 +17,7 @@ const ForgotPassword = (props) => (
                         sitekey="6Lf8aj4UAAAAAAI1X6wFypJkr6PeBfd0FX38XUTO"
                         className="g-recaptcha"
                     />
-                    <a id="login" href="#" className="btn btn-primary">Send</a>
+                    <a id="login" className="btn btn-primary">Send</a>
                     {/*This should be submit button but I replaced it with <a> for demo purposes*/}
                 </form>
                 <small>Back to </small>

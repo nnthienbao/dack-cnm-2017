@@ -8,7 +8,7 @@ const Header = (props) => (
                     {/*Navbar Header*/}
                     <div className="navbar-header">
                         {/*Navbar Brand*/}
-                        <div href="index.html" className="navbar-brand">
+                        <div className="navbar-brand">
                             <div className="brand-text brand-big"><strong>KCOIN</strong></div>
                         </div>
                     </div>
@@ -16,12 +16,12 @@ const Header = (props) => (
                     <ul className="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                         {/*Notifications*/}
                         <li className="nav-item dropdown">
-                            <a id="notifications" rel="nofollow" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" className="nav-link">
+                            <a id="notifications" rel="nofollow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" className="nav-link">
                                 <i className="fa fa-bell-o"/><span className="badge bg-red">12</span>
                             </a>
                             <ul aria-labelledby="notifications" className="dropdown-menu">
                                 <li>
-                                    <a rel="nofollow" href="#" className="dropdown-item">
+                                    <a rel="nofollow" className="dropdown-item">
                                         <div className="notification">
                                             <div className="notification-content">
                                                 <i className="fa fa-envelope bg-green"/>You have 6 new messages

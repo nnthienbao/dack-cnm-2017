@@ -1,8 +1,8 @@
 import React from 'react';
 import {Route} from 'react-router-dom';
 import Login from "./Login";
-import Register from "./Register";
 import ForgotPassword from "./ForgotPassword";
+import RegisterContainer from "../../containers/RegisterContainer";
 
 const LoginPage = (props) => (
     <div>
@@ -23,13 +23,13 @@ const LoginPage = (props) => (
                         </div>
                         {/*Form Panel*/}
                         <Route path="/login" component={Login}/>
-                        <Route path="/register" component={Register}/>
+                        <Route path="/register" component={RegisterContainer}/>
                         <Route path="/forgot-password" component={ForgotPassword}/>
                     </div>
                 </div>
             </div>
             <div className="copyrights text-center">
-                <p>Design by <a href="#" className="external">Kcoin</a></p></div>
+                <p>Design by <a className="external">Kcoin</a></p></div>
         </div>
     </div>
 )
