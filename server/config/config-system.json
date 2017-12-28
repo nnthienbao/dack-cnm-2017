@@ -1,0 +1,4 @@
+{
+  "connectionStringMongo": "localhost:27017/dack-cnm-2017",
+  "kcoinUriSocket": "wss://api.kcoin.club"
+}
