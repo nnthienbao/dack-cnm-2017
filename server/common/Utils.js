@@ -3,7 +3,6 @@ const ursa = require('ursa');
 const crypto = require('crypto');
 
 const config = require('../config/config-system.json');
-
 const HASH_ALGORITHM = 'sha256';
 
 module.exports.checkValidCaptcha = async function (captchaResponse) {

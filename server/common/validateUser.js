@@ -1,10 +1,35 @@
 const Validator = require('validator');
 const lodash = require('lodash');
+
 const checkValidCaptcha = require('./Utils').checkValidCaptcha;
+const User = require('../models/User');
 
 const env = process.env.NODE_ENV || 'development';
 
 module.exports.validateUserRegister = function (data) {
+    let { errors, isValid } = validateCommon(data);
+
+    return Promise.all([
+        User.findOne({username: data.username})
+            .then(function (user) {
+                if(user !== null) errors.username = "Tên người dùng đã có người sử dụng";
+            })
+            .catch(function (err) {})
+        ,
+        User.findOne({email: data.email})
+            .then(function (user) {
+                if(user !== null) errors.email = "Địa chỉ email đã có người sử dụng";
+            })
+            .catch(function (err) {})
+    ]).then(function () {
+        return {
+            errors: errors,
+            isValid: lodash.isEmpty(errors)
+        }
+    })
+}
+
+function validateCommon(data) {
     let errors = {};
 
     if(lodash.isEmpty(data.username)) {
