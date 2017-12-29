@@ -1,19 +1,35 @@
-var express = require('express');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 
-var config = require('./config/config-system.json');
+const config = require('./config/config-system.json');
+const secret = require('./secret-auth.json').secret;
 
 // Router
-var authentication = require('./routers/api/authentication');
+const authentication = require('./routers/api/authentication');
 
 mongoose.connect(config.connectionStringMongo);
 
 // require('./socket');
 
-var app = express();
+const app = express();
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
+
+app.use(function (req, res, next) {
+    if(req.headers && req.headers.authorization) {
+        jwt.verify(req.headers.authorization, secret, function (err, decode) {
+            console.log(decode);
+            req.user = decode;
+            if(err) req.user = undefined;
+        });
+        next();
+    } else {
+        req.user = undefined;
+        next();
+    }
+})
 
 app.use('/api', authentication);
 

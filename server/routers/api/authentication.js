@@ -1,24 +1,26 @@
 const express = require('express');
 const Router = express.Router();
 
-const validateUser = require('../../common/validateUser');
-const userController = require("../../controllers/userController");
+const authController = require('../../controllers/authController');
+
+function loginRequired(req, res, next) {
+    if (req.user) {
+        next();
+    } else {
+        return res.send(401);
+    }
+}
 
 Router.post('/register', function (req, res) {
-    validateUser.validateUserRegister(req.body)
-        .then(function ({errors, isValid}) {
-            if(!isValid) {
-                return res.status(400).json(errors);
-            }
-
-            userController.createUser(req, res);
-        });
+    authController.register(req, res);
 });
 
 Router.post('/authenticate', function (req, res) {
-    res.json({
-        message: "Ban yeu cau authenticate"
-    })
+    authController.authenticate(req, res);
+});
+
+Router.get('/secret-resource', loginRequired, function (req, res) {
+    res.status(200).json({msg: "success"});
 });
 
 module.exports = Router;
