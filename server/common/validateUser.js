@@ -1,9 +1,11 @@
-var Validator = require('validator');
-var lodash = require('lodash');
-var checkValidCaptcha = require('./Utils').checkValidCaptcha;
+const Validator = require('validator');
+const lodash = require('lodash');
+const checkValidCaptcha = require('./Utils').checkValidCaptcha;
+
+const env = process.env.NODE_ENV || 'development';
 
 module.exports.validateUserRegister = function (data) {
-    var errors = {};
+    let errors = {};
 
     if(lodash.isEmpty(data.username)) {
         errors.username = "Không được bỏ trống";
@@ -26,8 +28,10 @@ module.exports.validateUserRegister = function (data) {
         errors.repassword = "Mật khẩu phải giống nhau";
     }
 
-    if(!checkValidCaptcha(data.responseCaptcha)) {
-        errors.responseCaptcha = "Captcha không đúng";
+    if(env !== 'development') {
+        if (!checkValidCaptcha(data.responseCaptcha)) {
+            errors.responseCaptcha = "Captcha không đúng";
+        }
     }
 
     if(!data.agreeLicense) {

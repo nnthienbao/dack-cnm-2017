@@ -1,6 +1,8 @@
 import validator from 'validator';
 import lodash from 'lodash';
 
+const env = process.env.NODE_ENV || 'development';
+
 export function validateUserRegister(data) {
     let errors = {};
     if(lodash.isEmpty(data.username)) {
@@ -24,8 +26,10 @@ export function validateUserRegister(data) {
         errors.repassword = "Mật khẩu phải giống nhau";
     }
 
-    if(lodash.isEqual(data.responseCaptcha, '')) {
-        errors.responseCaptcha = "Bạn chưa nhập captcha";
+    if(env !== 'development') {
+        if (lodash.isEqual(data.responseCaptcha, '')) {
+            errors.responseCaptcha = "Bạn chưa nhập captcha";
+        }
     }
 
     if(!data.agreeLicense) {

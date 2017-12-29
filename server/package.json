@@ -10,12 +10,14 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "crypto": "^1.0.1",
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.0",
     "lodash": "^4.17.4",
     "mongoose": "^4.13.7",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
+    "ursa": "^0.9.4",
     "validator": "^9.2.0",
     "ws": "^3.3.3"
   }

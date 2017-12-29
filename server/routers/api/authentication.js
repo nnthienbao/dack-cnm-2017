@@ -1,14 +1,16 @@
-var express = require('express');
-var Router = express.Router();
+const express = require('express');
+const Router = express.Router();
 
-var validateUser = require('../../common/validateUser');
+const validateUser = require('../../common/validateUser');
+const generateAddress = require('../../common/Utils').generateAddress;
 
 Router.post('/register', function (req, res) {
     const { errors, isValid } = validateUser.validateUserRegister(req.body);
     if(!isValid) {
         return res.status(400).json(errors);
     }
-    return res.status(200).json({msg: "success"});
+    const address = generateAddress();
+    return res.status(200).json(address);
 })
 
 Router.post('/authenticate', function (req, res) {
