@@ -36,19 +36,27 @@ const Register = (props) => {
                                    onChange={props.onChange}/>
                             { errors.repassword && <div className="invalid-feedback">{errors.repassword}</div>}
                         </div>
-                        <div className={classnames("form-group", "terms-conditions", {"has-error": errors.agreeLicense})}>
-                            <input type="checkbox" name="agreeLicense" className="checkbox-template"
-                                   value={props.agreeLicense} onChange={props.onChange}/>
-                            <label htmlFor="license">Agree the terms and policy</label>
+                        <div className="form-group terms-conditions">
+                            <input type="checkbox" name="agreeLicense" className="checkbox-template" checked={props.agreeLicense}
+                                   onChange={props.onChange}/>
+                            <label htmlFor="license" className="form-control-label">Agree the terms and policy</label>
+                            <input type="hidden"
+                                   className={classnames("form-control", {"is-invalid": errors.agreeLicense})}
+                                   onChange={props.onChange}/>
+                            { errors.agreeLicense && <div className="invalid-feedback">{errors.agreeLicense}</div>}
                         </div>
-                        <Recaptcha
-                            callback={() => {
-                            }}
-                            expiredCallback={() => {
-                            }}
-                            sitekey="6Lf8aj4UAAAAAAI1X6wFypJkr6PeBfd0FX38XUTO"
-                            className="g-recaptcha"
-                        />
+                        <div className="form-group">
+                            <Recaptcha
+                                callback={props.callbackCaptcha}
+                                expiredCallback={props.expiredCallbackCaptcha}
+                                sitekey="6Lf8aj4UAAAAAAI1X6wFypJkr6PeBfd0FX38XUTO"
+                                className="g-recaptcha"
+                            />
+                            <input type="hidden"
+                                   className={classnames("form-control", {"is-invalid": errors.responseCaptcha})}
+                                   onChange={props.onChange}/>
+                            { errors.responseCaptcha && <div className="invalid-feedback">{errors.responseCaptcha}</div>}
+                        </div>
                         <button type="submit" disabled={props.isLoading} className="btn btn-primary">Register</button>
                     </form>
                     <small>Already have an account?</small>
@@ -65,5 +73,7 @@ Register.propTypes = {
     password: PropTypes.string.isRequired,
     repassword: PropTypes.string.isRequired,
     agreeLicense: PropTypes.bool.isRequired,
+    callbackCaptcha: PropTypes.func.isRequired,
+    expiredCallbackCaptcha: PropTypes.func.isRequired
 }
 export default Register;

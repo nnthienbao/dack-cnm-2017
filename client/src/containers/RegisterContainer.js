@@ -16,12 +16,15 @@ class RegisterContainer extends React.Component {
             email: '',
             password: '',
             repassword: '',
-            agreeLicense: false,
+            responseCaptcha: '',
+            agreeLicense: true,
             errors: {},
             isLoading: false
         };
 
         this.onChange = this.onChange.bind(this);
+        this.callbackCaptcha = this.callbackCaptcha.bind(this);
+        this.expiredCallbackCaptcha = this.expiredCallbackCaptcha.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.isValid = this.isValid.bind(this);
     }
@@ -35,6 +38,14 @@ class RegisterContainer extends React.Component {
                 [e.target.name]: e.target.checked
             })
         }
+    }
+
+    callbackCaptcha(response) {
+        this.setState({responseCaptcha: response});
+    }
+
+    expiredCallbackCaptcha() {
+        this.setState({responseCaptcha: ''});
     }
 
     isValid() {
@@ -73,6 +84,8 @@ class RegisterContainer extends React.Component {
                 password={this.state.password}
                 repassword={this.state.repassword}
                 agreeLicense={this.state.agreeLicense}
+                callbackCaptcha={this.callbackCaptcha}
+                expiredCallbackCaptcha = {this.expiredCallbackCaptcha}
                 errors={this.state.errors}
                 isLoading={this.state.isLoading}
                 onChange={this.onChange}
