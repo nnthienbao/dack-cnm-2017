@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import Register from '../components/login/Register';
 import { userRegisterRequest } from '../actions/userAction';
+import { validateUserRegister } from '../common/validateUser';
 
 class RegisterContainer extends React.Component {
     constructor(props) {
@@ -20,6 +21,7 @@ class RegisterContainer extends React.Component {
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.isValid = this.isValid.bind(this);
     }
 
     onChange(e) {
@@ -33,15 +35,27 @@ class RegisterContainer extends React.Component {
         }
     }
 
+    isValid() {
+        const { errors, isValid } = validateUserRegister(this.state);
+
+        if(!isValid) {
+            this.setState({errors});
+        }
+        return isValid;
+    }
+
     onSubmit(e) {
         e.preventDefault();
-        this.setState({
-            errors: {},
-            isLoading: true
-        });
-        this.props.userRegisterRequest(this.state)
-            .then(() => {})
-            .catch((error) => this.setState({errors: error.response.data, isLoading: false}));
+        if(this.isValid()) {
+            this.setState({
+                errors: {},
+                isLoading: true
+            });
+            this.props.userRegisterRequest(this.state)
+                .then(() => {
+                })
+                .catch((error) => this.setState({errors: error.response.data, isLoading: false}));
+        }
     }
 
     render() {
