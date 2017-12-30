@@ -1,12 +1,12 @@
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
-import userReducer from './reducers/userReducer';
+import authReducer from './reducers/authReducer';
 import flashMessageReducer from './reducers/flashMessageReducer';
 
 export default createStore(
     combineReducers({
-        user: userReducer,
+        auth: authReducer,
         flashMessage: flashMessageReducer
     }),
     compose(

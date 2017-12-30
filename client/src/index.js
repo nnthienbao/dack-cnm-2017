@@ -9,6 +9,10 @@ import registerServiceWorker from './registerServiceWorker';
 
 import store from './store';
 import ScrollToTop from "./components/ScrollToTop";
+import setAuthorizationToken from './Utils/setAuthorizationToken';
+
+
+setAuthorizationToken(localStorage.jwtToken);
 
 ReactDOM.render(
     <Provider store={store}>

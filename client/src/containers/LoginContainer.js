@@ -27,7 +27,6 @@ class LoginContainer extends React.Component {
     }
 
     onChange(e) {
-        console.log("onchange");
         this.setState({
             [e.target.name]: e.target.value
         })
