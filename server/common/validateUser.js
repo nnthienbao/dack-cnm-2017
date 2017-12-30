@@ -12,7 +12,6 @@ module.exports.validateUserRegister = function (data) {
     return checkValidCaptcha(data.responseCaptcha).then(res => {
         const parseData = JSON.parse(res);
         if(!parseData.success) {
-            errors.responseCaptcha = "Captcha không đúng";
             reject("Wrong captcha");
         }
 
@@ -41,6 +40,28 @@ module.exports.validateUserRegister = function (data) {
             isValid: lodash.isEmpty(errors)
         }
     })
+}
+
+module.exports.validateUserLogin = function (data) {
+    let errors = {};
+    return checkValidCaptcha(data.responseCaptcha)
+        .then(res => {
+            const parseData = JSON.parse(res);
+            if(!parseData.success) {
+                reject("Wrong captcha");
+            }
+            return {
+                errors: errors,
+                isValid: lodash.isEmpty(errors)
+            }
+        })
+        .catch(error => {
+            errors.responseCaptcha = "Captcha không đúng";
+            return {
+                errors: errors,
+                isValid: lodash.isEmpty(errors)
+            }
+        })
 }
 
 function validateCommon(data) {

@@ -56,8 +56,10 @@ class LoginContainer extends React.Component {
             }).catch(err => {
                 this.setState({
                     errors: err.response.data,
-                    isLoading: false
-                })
+                    isLoading: false,
+                    responseCaptcha: ''
+                });
+                window.grecaptcha.reset();
             })
         }
     }
