@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 
-import Login from '../components/login/Login';
-import {validateInput} from '../validation/validateUser';
-import {userLoginRequest} from '../actions/userAction'
+import Login from '../../components/login/Login';
+import {validateInput} from '../../validation/validateUser';
+import {userLoginRequest} from '../../actions/userAction'
 
 class LoginContainer extends React.Component {
     constructor(props) {
@@ -19,11 +18,20 @@ class LoginContainer extends React.Component {
             errors: {}
         };
 
+        this.isAuthenticate = this.isAuthenticate.bind(this);
         this.onChange = this.onChange.bind(this);
         this.callbackCaptcha = this.callbackCaptcha.bind(this);
         this.expiredCallbackCaptcha = this.expiredCallbackCaptcha.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.isValid = this.isValid.bind(this);
+    }
+
+    componentWillMount() {
+        if(this.isAuthenticate()) this.props.history.push('/dashboard');
+    }
+
+    isAuthenticate() {
+        return this.props.auth.isAuthenticate;
     }
 
     onChange(e) {
@@ -82,7 +90,14 @@ class LoginContainer extends React.Component {
 }
 
 LoginContainer.propTypes = {
+    auth: PropTypes.object.isRequired,
     userLoginRequest: PropTypes.func.isRequired
 }
 
-export default withRouter(connect(state => { return {} }, { userLoginRequest })(LoginContainer));
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth
+    }
+}
+
+export default connect(mapStateToProps, { userLoginRequest })(LoginContainer);

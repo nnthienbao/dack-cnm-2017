@@ -1,8 +1,6 @@
 import validator from 'validator';
 import lodash from 'lodash';
 
-const env = process.env.NODE_ENV || 'development';
-
 export function validateInput(data) {
     let errors = {};
 
@@ -32,11 +30,9 @@ export function validateInput(data) {
         }
     }
 
-    // if(env !== 'development') {
-        if (!lodash.isUndefined(data.responseCaptcha) && lodash.isEqual(data.responseCaptcha, '')) {
-            errors.responseCaptcha = "Bạn chưa nhập captcha";
-        }
-    //}
+    if (!lodash.isUndefined(data.responseCaptcha) && lodash.isEqual(data.responseCaptcha, '')) {
+        errors.responseCaptcha = "Bạn chưa nhập captcha";
+    }
 
     if(!lodash.isUndefined(data.agreeLicense) && !data.agreeLicense) {
         errors.agreeLicense = "Bạn chưa đồng ý các điều khoản";

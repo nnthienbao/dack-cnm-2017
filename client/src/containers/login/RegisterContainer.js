@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 
-import Register from '../components/login/Register';
-import {userRegisterRequest} from '../actions/userAction';
-import {addFlashMessage} from '../actions/flashMessageAction';
-import {validateInput} from '../validation/validateUser';
+import Register from '../../components/login/Register';
+import {userRegisterRequest} from '../../actions/userAction';
+import {addFlashMessage} from '../../actions/flashMessageAction';
+import {validateInput} from '../../validation/validateUser';
 
 class RegisterContainer extends React.Component {
     constructor(props) {
@@ -103,6 +103,6 @@ RegisterContainer.propTypes = {
     addFlashMessage: PropTypes.func.isRequired
 }
 
-export default withRouter(connect((state) => {
+export default connect((state) => {
     return {}
-}, {userRegisterRequest, addFlashMessage})(RegisterContainer));
+}, {userRegisterRequest, addFlashMessage})(RegisterContainer);

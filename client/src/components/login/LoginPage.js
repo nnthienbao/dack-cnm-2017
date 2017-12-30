@@ -1,8 +1,8 @@
 import React from 'react';
 import {Route} from 'react-router-dom';
 import ForgotPassword from "./ForgotPassword";
-import RegisterContainer from "../../containers/RegisterContainer";
-import LoginContainer from "../../containers/LoginContainer";
+import RegisterContainer from "../../containers/login/RegisterContainer";
+import LoginContainer from "../../containers/login/LoginContainer";
 
 const LoginPage = (props) => (
     <div>

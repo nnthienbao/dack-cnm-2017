@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import {BrowserRouter} from "react-router-dom";
+import jwt_decode from 'jwt-decode';
 
 import './index.css';
 import App from './containers/App';
@@ -10,9 +11,12 @@ import registerServiceWorker from './registerServiceWorker';
 import store from './store';
 import ScrollToTop from "./components/ScrollToTop";
 import setAuthorizationToken from './Utils/setAuthorizationToken';
+import {setCurrentUser} from './actions/userAction';
 
-
-setAuthorizationToken(localStorage.jwtToken);
+if(localStorage.jwtToken) {
+    setAuthorizationToken(localStorage.jwtToken);
+    store.dispatch(setCurrentUser(jwt_decode(localStorage.jwtToken)));
+}
 
 ReactDOM.render(
     <Provider store={store}>

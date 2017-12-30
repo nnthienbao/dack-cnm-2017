@@ -36,7 +36,7 @@ const Header = (props) => (
                         </li>
                         {/*Logout*/}
                         <li className="nav-item">
-                            <a href="login.html" className="nav-link logout">Logout<i className="fa fa-sign-out"/></a>
+                            <a href="#" onClick={props.logout} className="nav-link logout">Logout<i className="fa fa-sign-out"/></a>
                         </li>
                     </ul>
                 </div>
