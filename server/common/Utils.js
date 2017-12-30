@@ -5,19 +5,12 @@ const crypto = require('crypto');
 const config = require('../config/config-system.json');
 const HASH_ALGORITHM = 'sha256';
 
-module.exports.checkValidCaptcha = async function (captchaResponse) {
+module.exports.checkValidCaptcha = function (captchaResponse) {
     const data = {
         "secret": config.recaptcha.secret,
         "response": captchaResponse
     }
-    request.post(config.recaptcha.url, {form:data})
-        .then(function (res) {
-            const parseData = JSON.parse(res);
-            return parseData.success;
-        })
-        .catch(function (err) {
-            return false;
-        })
+    return request.post(config.recaptcha.url, {form:data});
 }
 
 function hash(data) {

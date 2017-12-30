@@ -9,19 +9,33 @@ const env = process.env.NODE_ENV || 'development';
 module.exports.validateUserRegister = function (data) {
     let { errors, isValid } = validateCommon(data);
 
-    return Promise.all([
-        User.findOne({username: data.username})
-            .then(function (user) {
-                if(user !== null) errors.username = "Tên người dùng đã có người sử dụng";
-            })
-            .catch(function (err) {})
-        ,
-        User.findOne({email: data.email})
-            .then(function (user) {
-                if(user !== null) errors.email = "Địa chỉ email đã có người sử dụng";
-            })
-            .catch(function (err) {})
-    ]).then(function () {
+    return checkValidCaptcha(data.responseCaptcha).then(res => {
+        const parseData = JSON.parse(res);
+        if(!parseData.success) {
+            errors.responseCaptcha = "Captcha không đúng";
+            reject("Wrong captcha");
+        }
+
+        return Promise.all([
+            User.findOne({username: data.username})
+                .then(function (user) {
+                    if(user !== null) errors.username = "Tên người dùng đã có người sử dụng";
+                })
+                .catch(function (err) {})
+            ,
+            User.findOne({email: data.email})
+                .then(function (user) {
+                    if(user !== null) errors.email = "Địa chỉ email đã có người sử dụng";
+                })
+                .catch(function (err) {})
+        ]).then(function () {
+            return {
+                errors: errors,
+                isValid: lodash.isEmpty(errors)
+            }
+        })
+    }).catch(error => {
+        errors.responseCaptcha = "Captcha không đúng";
         return {
             errors: errors,
             isValid: lodash.isEmpty(errors)
@@ -53,11 +67,6 @@ function validateCommon(data) {
         errors.repassword = "Mật khẩu phải giống nhau";
     }
 
-    if(env !== 'development') {
-        if (!checkValidCaptcha(data.responseCaptcha)) {
-            errors.responseCaptcha = "Captcha không đúng";
-        }
-    }
 
     if(!data.agreeLicense) {
         errors.agreeLicense = "Bạn chưa đồng ý các điều khoản";

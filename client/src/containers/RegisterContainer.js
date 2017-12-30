@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 
 import Register from '../components/login/Register';
 import {userRegisterRequest} from '../actions/userAction';
 import {addFlashMessage} from '../actions/flashMessageAction';
-import {validateUserRegister} from '../common/validateUser';
+import {validateInput} from '../validation/validateUser';
 
 class RegisterContainer extends React.Component {
     constructor(props) {
@@ -49,7 +49,7 @@ class RegisterContainer extends React.Component {
     }
 
     isValid() {
-        const {errors, isValid} = validateUserRegister(this.state);
+        const {errors, isValid} = validateInput(this.state);
 
         if (!isValid) {
             this.setState({errors});
@@ -72,7 +72,10 @@ class RegisterContainer extends React.Component {
                     })
                     this.props.history.push('/login');
                 })
-                .catch((error) => this.setState({errors: error.response.data, isLoading: false}));
+                .catch((error) => {
+                    this.setState({errors: error.response.data, isLoading: false, responseCaptcha: ''});
+                    window.grecaptcha.reset();
+                });
         }
     }
 
@@ -85,7 +88,7 @@ class RegisterContainer extends React.Component {
                 repassword={this.state.repassword}
                 agreeLicense={this.state.agreeLicense}
                 callbackCaptcha={this.callbackCaptcha}
-                expiredCallbackCaptcha = {this.expiredCallbackCaptcha}
+                expiredCallbackCaptcha={this.expiredCallbackCaptcha}
                 errors={this.state.errors}
                 isLoading={this.state.isLoading}
                 onChange={this.onChange}

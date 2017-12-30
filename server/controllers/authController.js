@@ -21,10 +21,14 @@ module.exports.authenticate = function (req, res) {
     User.findOne({username: req.body.username})
         .then(user => {
             if(user === null) {
-                return res.status(400).json({msg: "Authenticate fail"});
+                return res.status(401).json({
+                    auth: "Thông tin đăng nhập không hợp lệ",
+                })
             }
             if(!user.comparePassword(req.body.password)) {
-                return res.status(400).json({msg: "Authenticate fail"});
+                return res.status(401).json({
+                    auth: "Thông tin đăng nhập không hợp lệ"
+                })
             }
             const payload = {
                 _id: user._id,
@@ -33,7 +37,7 @@ module.exports.authenticate = function (req, res) {
             };
             jwt.sign(payload, secret, { expiresIn: 60 * 60 }, function (err, token) {
                 if(err) return res.status(500);
-                res.status(200).json({token: token});
+                res.status(200).json({token: 'Bearer ' + token});
             })
         })
         .catch(err => {

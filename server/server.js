@@ -19,8 +19,7 @@ app.use(bodyParser.json());
 
 app.use(function (req, res, next) {
     if(req.headers && req.headers.authorization) {
-        jwt.verify(req.headers.authorization, secret, function (err, decode) {
-            console.log(decode);
+        jwt.verify(req.headers.authorization.split(' ')[1], secret, function (err, decode) {
             req.user = decode;
             if(err) req.user = undefined;
         });
