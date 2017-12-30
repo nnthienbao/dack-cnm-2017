@@ -68,11 +68,12 @@ class RegisterContainer extends React.Component {
                 .then((res) => {
                     this.props.addFlashMessage({
                         type: 'success',
-                        text: 'Bạn đã đăng ký thành công, xin mời đăng nhập'
+                        text: 'Mời xác thực email để hoàn tất đăng ký'
                     })
-                    this.props.history.push('/login');
+                    this.props.history.push('/verify-account');
                 })
                 .catch((error) => {
+                console.log(error);
                     this.setState({errors: error.response.data, isLoading: false, responseCaptcha: ''});
                     window.grecaptcha.reset();
                 });

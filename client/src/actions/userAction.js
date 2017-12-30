@@ -36,3 +36,9 @@ export function userLoginRequest(user) {
             })
     }
 }
+
+export function userVerifyEmailRequest(data) {
+    return dispatch => {
+        return axios.post('/api/verify', data);
+    }
+}

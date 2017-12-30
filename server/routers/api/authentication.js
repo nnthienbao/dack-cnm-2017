@@ -2,6 +2,7 @@ const express = require('express');
 const Router = express.Router();
 
 const authController = require('../../controllers/authController');
+const userController = require('../../controllers/userController');
 
 function loginRequired(req, res, next) {
     if (req.user) {
@@ -17,6 +18,10 @@ Router.post('/register', function (req, res) {
 
 Router.post('/authenticate', function (req, res) {
     authController.authenticate(req, res);
+});
+
+Router.post('/verify', function (req, res) {
+    userController.verifyAccount(req, res);
 });
 
 Router.get('/secret-resource', loginRequired, function (req, res) {

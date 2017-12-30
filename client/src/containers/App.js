@@ -14,6 +14,7 @@ class App extends Component {
                 <Route path="/login" component={LoginPage}/>
                 <Route path="/register" component={LoginPage}/>
                 <Route path="/forgot-password" component={LoginPage}/>
+                <Route path="/verify-account" component={LoginPage}/>
                 <Route path="/dashboard" component={requiredAuth(DashboardPage)}/>
             </div>
         );

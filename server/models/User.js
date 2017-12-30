@@ -17,6 +17,10 @@ let UserSchema = new Schema({
         type: String,
         require: true
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     key: {
         type: Object,
         require: true

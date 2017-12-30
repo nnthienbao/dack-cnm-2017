@@ -4,7 +4,7 @@ const validateUser = require('../common/validateUser');
 const userController = require("../controllers/userController");
 const User = require('../models/User');
 
-const secret = require('../secret-auth.json').secret;
+const secret = require('../secret.json').jwtSecret;
 
 module.exports.register = function (req, res) {
     validateUser.validateUserRegister(req.body)

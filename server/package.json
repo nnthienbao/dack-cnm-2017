@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^6.1.4",
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
     "crypto": "^1.0.1",

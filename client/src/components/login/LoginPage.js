@@ -3,6 +3,7 @@ import {Route} from 'react-router-dom';
 import ForgotPassword from "./ForgotPassword";
 import RegisterContainer from "../../containers/login/RegisterContainer";
 import LoginContainer from "../../containers/login/LoginContainer";
+import VerifyAccountContainer from "../../containers/login/VerifyAccountContainer";
 
 const LoginPage = (props) => (
     <div>
@@ -25,6 +26,7 @@ const LoginPage = (props) => (
                         <Route path="/login" component={LoginContainer}/>
                         <Route path="/register" component={RegisterContainer}/>
                         <Route path="/forgot-password" component={ForgotPassword}/>
+                        <Route path="/verify-account" component={VerifyAccountContainer}/>
                     </div>
                 </div>
             </div>
