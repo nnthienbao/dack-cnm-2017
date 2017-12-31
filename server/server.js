@@ -11,7 +11,7 @@ const authentication = require('./routers/api/authentication');
 
 mongoose.connect(config.connectionStringMongo);
 
-// require('./socket');
+//require('./socket');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true}));

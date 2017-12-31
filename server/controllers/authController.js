@@ -36,6 +36,11 @@ module.exports.authenticate = function (req, res) {
                             auth: "Thông tin đăng nhập không hợp lệ"
                         })
                     }
+                    if(!user.isVerified) {
+                        return res.status(401).json({
+                            auth: "Tài khoản chưa xác thực"
+                        })
+                    }
                     const payload = {
                         _id: user._id,
                         username: user.username,

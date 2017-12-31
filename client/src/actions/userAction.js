@@ -42,3 +42,9 @@ export function userVerifyEmailRequest(data) {
         return axios.post('/api/verify', data);
     }
 }
+
+export function userResendTokenVerifyAccountRequest(username) {
+    return dispatch => {
+        return axios.post('/api/resend-token-verify', {username});
+    }
+}

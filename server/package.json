@@ -16,6 +16,7 @@
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.0",
     "lodash": "^4.17.4",
+    "log4js": "^2.4.1",
     "mongoose": "^4.13.7",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",

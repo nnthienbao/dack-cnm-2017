@@ -31,7 +31,7 @@ module.exports.createUser = function (req, res) {
 
             sendVerifyEmail(req, user, tokenVerify)
                 .then(() => {
-                    return res.send(200);
+                    return res.sendStatus(200);
                 })
                 .catch(err => {
                     console.log(err);
@@ -66,3 +66,71 @@ module.exports.verifyAccount = function (req, res) {
         })
     });
 };
+
+
+module.exports.ResendTokenVerify = function (req, res) {
+    const { username } = req.body;
+
+    User.findOne({ username: username }, function (err, user) {
+        if(err) return res.status(500).json({msg: "Fail"});
+        if(!user) return res.status(400).json({error: "Tài khoản không có trong hệ thống"});
+        if(user.isVerified) return res.status(400).json({error: "Tài khoản này đã xác nhận"});
+
+        TokenVerify.findOne({_userId: user._id}, function (err, tokenVerify) {
+            if(err) return res.status(500).json({msg: "Fail"});
+
+            if(!tokenVerify) {
+                const token = crypto.randomBytes(16).toString('hex');
+                const tokenVerifyNew = new TokenVerify({
+                    _userId: user._id,
+                    token: token
+                });
+
+                tokenVerifyNew.save(function (err) {
+                    if(err) {
+                        console.log(err);
+                        return res.status(500).json({msg: "fail"});
+                    }
+                    sendVerifyEmail(req, user, tokenVerifyNew)
+                        .then(() => {
+                            return res.sendStatus(200);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            return res.status(500).json({msg: "fail"});
+                        })
+                })
+            } else {
+                sendVerifyEmail(req, user, tokenVerify)
+                    .then(() => {
+                        return res.sendStatus(200);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        return res.status(500).json({msg: "fail"});
+                    })
+            }
+        })
+    })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

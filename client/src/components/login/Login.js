@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import FlashMessageList from "../../containers/FlashMessageList";
 import TextFieldGroup from "../../common/TextFieldGroup";
 import CaptchaGoogle from "../../common/CaptchaGoogle";
+import ResendTokenVerifyAccount from "./ResendTokenVerifyAccount";
 
 const Login = (props) => {
     const {username, password, twoFaCode, isLoading, errors, onChange, callbackCaptcha, expiredCallbackCaptcha, onSubmit} = props;
@@ -14,7 +15,10 @@ const Login = (props) => {
             <div className="form align-items-center">
                 <div className="content">
                     <FlashMessageList/>
-                    { errors.auth && <div className="alert alert-danger">{errors.auth}</div> }
+                    {
+                        (errors.auth === "Tài khoản chưa xác thực" && <ResendTokenVerifyAccount username={username}/>)
+                        || (errors.auth && <div className="alert alert-danger">{errors.auth}</div>)
+                    }
                     <form onSubmit={onSubmit}>
                         <TextFieldGroup
                             field={"username"}

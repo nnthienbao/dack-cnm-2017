@@ -24,6 +24,10 @@ Router.post('/verify', function (req, res) {
     userController.verifyAccount(req, res);
 });
 
+Router.post('/resend-token-verify', function (req, res) {
+    userController.ResendTokenVerify(req, res);
+});
+
 Router.get('/secret-resource', loginRequired, function (req, res) {
     res.status(200).json({msg: "success"});
 });

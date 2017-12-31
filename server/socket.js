@@ -1,8 +1,16 @@
-var WebSocket = require('ws');
+const WebSocket = require('ws');
 
-var config = require('./config/config-system.json');
+const config = require('./config/config-system.json');
 
 const ws = new WebSocket(config.kcoinUriSocket);
+
+const log4js = require('log4js');
+log4js.configure({
+    appenders: { listenSocket: { type: 'file', filename: 'listen-socket.log' } },
+    categories: { default: { appenders: ['listenSocket'], level: 'info' } }
+});
+
+const logger = log4js.getLogger('listenSocket');
 
 ws.on('open', function open() {
     console.log('WS connect api-kcoin success');
@@ -15,4 +23,5 @@ ws.on('open', function open() {
 
 ws.on('message', function incoming(data) {
     console.log(data);
+    logger.info(data);
 });
