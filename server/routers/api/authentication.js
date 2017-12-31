@@ -28,6 +28,14 @@ Router.post('/resend-token-verify', function (req, res) {
     userController.ResendTokenVerify(req, res);
 });
 
+Router.post('/request-reset-password', function (req, res) {
+    userController.requestResetPassword(req, res);
+});
+
+Router.post('/reset-password', function (req, res) {
+    userController.resetPassword(req, res);
+})
+
 Router.get('/secret-resource', loginRequired, function (req, res) {
     res.status(200).json({msg: "success"});
 });

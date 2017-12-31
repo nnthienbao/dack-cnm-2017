@@ -1,9 +1,13 @@
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const generateAddress = require('../common/Utils').generateAddress;
+const isEqual = require('lodash').isEqual;
+
+const { generateAddress, createTokenVerifyWithUser } = require('../common/Utils');
 const User = require('../models/User');
 const TokenVerify = require('../models/TokenVerify');
-const { sendVerifyEmail } = require('../common/mailSender');
+const { sendVerifyEmail, sendResetPassword } = require('../common/mailSender');
+const {checkValidCaptcha} = require('../common/Utils');
+const validateResetPassword = require('../validation/validateResetPassword').default;
 
 module.exports.createUser = function (req, res) {
     const key = generateAddress();
@@ -67,7 +71,6 @@ module.exports.verifyAccount = function (req, res) {
     });
 };
 
-
 module.exports.ResendTokenVerify = function (req, res) {
     const { username } = req.body;
 
@@ -112,7 +115,64 @@ module.exports.ResendTokenVerify = function (req, res) {
             }
         })
     })
-}
+};
+
+module.exports.requestResetPassword = function(req, res) {
+    const { email, responseCaptcha } = req.body;
+
+    checkValidCaptcha(responseCaptcha)
+        .then(resolve => {
+            const parseData = JSON.parse(resolve);
+            if(!parseData.success) {
+                reject("Wrong captcha");
+            }
+
+            User.findOne({email: email}, function (err, user) {
+                if(err) return res.status(500).json({msg: "fail"});
+                if(!user) return res.status(400).json({error: "Không tìm thấy tài khoản ứng với email trong hệ thống"});
+
+                const tokenVerify = createTokenVerifyWithUser(user, "ResetPassword");
+                tokenVerify.save(function (err) {
+                    if(err) return res.status(500).json({msg: "Fail"});
+
+                    sendResetPassword(user, tokenVerify)
+                        .then((resolve) => {
+                            return res.sendStatus(200);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            return res.status(500).json({msg: "fail"});
+                        })
+                });
+            })
+        })
+        .catch(err => {
+            return res.status(400).json({responseCaptcha: "Captcha không đúng"});
+        });
+};
+
+module.exports.resetPassword = function (req, res) {
+    const { errors, isValid } = validateResetPassword(req.body);
+    if(!isValid) return res.status(400).json(errors);
+
+    const { token, passwordNew, rePasswordNew } = req.body;
+
+    TokenVerify.findOne({token: token}, function (err, tokenVerify) {
+        if(err) return res.status(500).json({err: "Fail"});
+        if(!tokenVerify) return res.status(400).json({token: "Không tìm thấy token"});
+
+        User.findOne({_id: tokenVerify._userId}, function (err, user) {
+            if(err) return res.status(500).json({err: "Fail"});
+
+            user.hashPassword = bcrypt.hashSync(passwordNew, 10);
+            user.save(function (err) {
+                if(err) return res.status(500).json({err: "Fail"});
+                tokenVerify.remove();
+                res.sendStatus(200);
+            })
+        })
+    })
+};
 
 
 

@@ -4,5 +4,6 @@
   "recaptcha": {
     "url": "https://www.google.com/recaptcha/api/siteverify",
     "secret": "6Lf8aj4UAAAAAO2T5US6k2EipuHAR3dicXx8f-_x"
-  }
+  },
+  "urlClientSide": "http://localhost:3000"
 }

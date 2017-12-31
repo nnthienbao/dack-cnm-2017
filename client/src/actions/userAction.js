@@ -48,3 +48,24 @@ export function userResendTokenVerifyAccountRequest(username) {
         return axios.post('/api/resend-token-verify', {username});
     }
 }
+
+export function userRequestResetPassword({ email, responseCaptcha }) {
+    return dispatch => {
+        return axios.post('/api/request-reset-password', { email, responseCaptcha });
+    }
+}
+
+export function userResetPassword({ token, passwordNew, rePasswordNew }) {
+    return dispatch => {
+        return axios.post('/api/reset-password', { token, passwordNew, rePasswordNew });
+    }
+}
+
+
+
+
+
+
+
+
+

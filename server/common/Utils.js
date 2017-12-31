@@ -3,6 +3,8 @@ const ursa = require('ursa');
 const crypto = require('crypto');
 
 const config = require('../config/config-system.json');
+const TokenVerify = require('../models/TokenVerify');
+
 const HASH_ALGORITHM = 'sha256';
 
 module.exports.checkValidCaptcha = function (captchaResponse) {
@@ -33,3 +35,26 @@ module.exports.generateAddress = function () {
         address: hash(publicKey).toString('hex')
     };
 }
+
+module.exports.createTokenVerifyWithUser = function (user, type) {
+    const token = crypto.randomBytes(16).toString('hex');
+    const tokenVerify = new TokenVerify({
+        _userId: user._id,
+        token: token,
+        type: type
+    });
+
+    return tokenVerify;
+};
+
+
+
+
+
+
+
+
+
+
+
+

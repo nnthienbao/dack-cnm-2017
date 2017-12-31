@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const validateUser = require('../common/validateUser');
+const validateUser = require('../validation/validateUser');
 const userController = require("../controllers/userController");
 const User = require('../models/User');
 

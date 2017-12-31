@@ -1,7 +1,7 @@
 const Validator = require('validator');
 const lodash = require('lodash');
 
-const checkValidCaptcha = require('./Utils').checkValidCaptcha;
+const checkValidCaptcha = require('../common/Utils').checkValidCaptcha;
 const User = require('../models/User');
 
 const env = process.env.NODE_ENV || 'development';
