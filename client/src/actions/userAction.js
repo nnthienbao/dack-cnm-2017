@@ -2,7 +2,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
 import setAuthorizationToken from '../Utils/setAuthorizationToken';
-import { SET_CURRENT_USER } from '../actionType';
+import { SET_CURRENT_USER, SET_INFO_USER } from '../actionType';
 
 export function userRegisterRequest(user) {
     return dispatch => {
@@ -61,6 +61,20 @@ export function userResetPassword({ token, passwordNew, rePasswordNew }) {
     }
 }
 
+export function setInfoUserAuth(user) {
+    return {
+        type: SET_INFO_USER,
+        user
+    }
+}
+
+export function userRequestGetInfo() {
+    return dispatch => {
+        return axios.get('/api/user', {}).then(res => {
+            dispatch(setInfoUserAuth(res.data));
+        })
+    }
+}
 
 
 

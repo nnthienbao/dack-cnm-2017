@@ -3,11 +3,13 @@ import thunk from 'redux-thunk';
 
 import authReducer from './reducers/authReducer';
 import flashMessageReducer from './reducers/flashMessageReducer';
+import userReducer from './reducers/userReducer';
 
 export default createStore(
     combineReducers({
         auth: authReducer,
-        flashMessage: flashMessageReducer
+        flashMessage: flashMessageReducer,
+        user: userReducer
     }),
     compose(
         applyMiddleware(thunk),

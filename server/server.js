@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 
 const config = require('./config/config-system.json');
-const secret = require('./secret.json').secret;
+const secret = require('./secret.json').jwtSecret;
 
 // Router
 const authentication = require('./routers/api/authentication');

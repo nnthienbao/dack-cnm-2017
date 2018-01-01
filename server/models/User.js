@@ -25,7 +25,11 @@ let UserSchema = new Schema({
         type: Object,
         require: true
     },
-    wallet: {
+    realableWallet: {
+        type: Number,
+        default: 0
+    },
+    availableWallet: {
         type: Number,
         default: 0
     }
