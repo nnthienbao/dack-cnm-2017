@@ -24,6 +24,10 @@ let UserSchema = new Schema({
     key: {
         type: Object,
         require: true
+    },
+    wallet: {
+        type: Number,
+        default: 0
     }
 });
 

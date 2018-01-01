@@ -39,25 +39,25 @@ export function userLoginRequest(user) {
 
 export function userVerifyEmailRequest(data) {
     return dispatch => {
-        return axios.post('/api/verify', data);
+        return axios.post('/api/user/verify', data);
     }
 }
 
 export function userResendTokenVerifyAccountRequest(username) {
     return dispatch => {
-        return axios.post('/api/resend-token-verify', {username});
+        return axios.post('/api/user/resend-token-verify', {username});
     }
 }
 
 export function userRequestResetPassword({ email, responseCaptcha }) {
     return dispatch => {
-        return axios.post('/api/request-reset-password', { email, responseCaptcha });
+        return axios.post('/api/user/request-reset-password', { email, responseCaptcha });
     }
 }
 
 export function userResetPassword({ token, passwordNew, rePasswordNew }) {
     return dispatch => {
-        return axios.post('/api/reset-password', { token, passwordNew, rePasswordNew });
+        return axios.post('/api/user/reset-password', { token, passwordNew, rePasswordNew });
     }
 }
 

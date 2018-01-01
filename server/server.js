@@ -8,6 +8,7 @@ const secret = require('./secret.json').secret;
 
 // Router
 const authentication = require('./routers/api/authentication');
+const user = require('./routers/api/user');
 
 mongoose.connect(config.connectionStringMongo);
 
@@ -31,6 +32,7 @@ app.use(function (req, res, next) {
 })
 
 app.use('/api', authentication);
+app.use('/api/user', user);
 
 
 app.listen(8080, function () {
