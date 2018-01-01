@@ -14,25 +14,28 @@ const Header = (props) => (
                     </div>
                     {/*Navbar Menu*/}
                     <ul className="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
+                        <li className="nav-item">
+                            <div className="text-center show-price verticalLine">
+                                <p>Số dư thực tế</p>
+                                <small>200 KCO</small>
+                            </div>
+                        </li>
+                        <li className="nav-item">
+                            <div className="text-center show-price verticalLine">
+                                <p>Số dư khả dụng</p>
+                                <small>100 KCO</small>
+                            </div>
+                        </li>
+                        <li className="nav-item">
+                            <div className="text-center show-price">
+                                <p>nnthienbao</p>
+                            </div>
+                        </li>
                         {/*Notifications*/}
                         <li className="nav-item dropdown">
                             <a id="notifications" rel="nofollow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" className="nav-link">
                                 <i className="fa fa-bell-o"/><span className="badge bg-red">12</span>
                             </a>
-                            <ul aria-labelledby="notifications" className="dropdown-menu">
-                                <li>
-                                    <a rel="nofollow" className="dropdown-item">
-                                        <div className="notification">
-                                            <div className="notification-content">
-                                                <i className="fa fa-envelope bg-green"/>You have 6 new messages
-                                            </div>
-                                            <div className="notification-time">
-                                                <small>4 minutes ago</small>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                         {/*Logout*/}
                         <li className="nav-item">
