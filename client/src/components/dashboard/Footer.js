@@ -5,7 +5,7 @@ const Footer = (props) => (
         <div className="container-fluid">
             <div className="row">
                 <div className="col-sm-6 offset-6 text-right">
-                    <p>Design by <a href="#" className="external">KCOIN</a></p>
+                    <p>Design by <a className="external">KCOIN</a></p>
                 </div>
             </div>
         </div>
