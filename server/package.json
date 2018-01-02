@@ -4,7 +4,7 @@
   "description": "Do an cuoi ky mon Cac cong nghe moi trong phat trien phan mem",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
@@ -23,5 +23,8 @@
     "ursa": "^0.9.4",
     "validator": "^9.2.0",
     "ws": "^3.3.3"
+  },
+  "devDependencies": {
+    "mocha": "^4.1.0"
   }
 }

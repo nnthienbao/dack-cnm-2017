@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import Recaptcha from 'react-grecaptcha';
 import classnames from 'classnames';
 
+import config from '../config.json';
+const sitekey = config.sitekey;
+
 const CaptchaGoogle = (props) => {
     const { error, callbackCaptcha, expiredCallbackCaptcha } = props;
     return (
         <div className="form-group">
             <Recaptcha
-                sitekey="6Lf8aj4UAAAAAAI1X6wFypJkr6PeBfd0FX38XUTO"
+                sitekey={sitekey}
                 className="g-recaptcha"
                 callback={callbackCaptcha}
                 expiredCallback={expiredCallbackCaptcha}

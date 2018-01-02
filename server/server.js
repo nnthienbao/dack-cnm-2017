@@ -12,7 +12,7 @@ const user = require('./routers/api/user');
 
 mongoose.connect(config.connectionStringMongo);
 
-//require('./socket');
+//require('./socket/startSocket');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true}));

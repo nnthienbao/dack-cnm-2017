@@ -1,6 +1,7 @@
 const WebSocket = require('ws');
 
-const config = require('./config/config-system.json');
+const config = require('../config/config-system.json');
+const { whenReceiveTransaction } = require('./handleReceiveMessage');
 
 const ws = new WebSocket(config.kcoinUriSocket);
 
@@ -22,6 +23,31 @@ ws.on('open', function open() {
 });
 
 ws.on('message', function incoming(data) {
-    console.log(data);
     logger.info(data);
+    if(data.type === "transaction") {
+        const transaction = data.data;
+        console.log(transaction);
+        whenReceiveTransaction(transaction);
+    }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

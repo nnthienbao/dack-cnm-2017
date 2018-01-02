@@ -53,7 +53,7 @@ const Wallet = (props) => {
                                     <form className="form-horizontal">
                                         <div className="form-group">
                                             <div className="input-group">
-                                                <input readOnly type="text" value="82575e86a3c7e05b9c8cec01454ae3d085fa4472b5f02203a1aa941f855d1628" className="form-control"/><span className="input-group-btn">
+                                                <input readOnly type="text" value={address} className="form-control"/><span className="input-group-btn">
                                   <button type="button" className="btn btn-primary">Copy</button></span>
                                             </div>
                                         </div>
