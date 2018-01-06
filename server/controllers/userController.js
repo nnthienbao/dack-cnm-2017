@@ -6,7 +6,7 @@ const { generateAddress, createTokenVerifyWithUser } = require('../common/Utils'
 const User = require('../models/User');
 const TokenVerify = require('../models/TokenVerify');
 const { sendVerifyEmail, sendResetPassword } = require('../common/mailSender');
-const {checkValidCaptcha} = require('../common/Utils');
+const {checkValidCaptcha, getCoinLocked, getRealableWallet} = require('../common/Utils');
 const validateResetPassword = require('../validation/validateResetPassword').default;
 
 module.exports.createUser = function (req, res) {
@@ -171,6 +171,38 @@ module.exports.resetPassword = function (req, res) {
                 res.sendStatus(200);
             })
         })
+    })
+};
+
+module.exports.getUser = function(req, res) {
+    User.findOne({_id: req.user._id}).then(user => {
+        if(!user) return res.sendStatus(401);
+
+        let data = {
+            username: user.username,
+            email: user.email,
+            address: user.key.address,
+        };
+
+        // Tim so du thuc te va kha dung
+        getRealableWallet(user.key.address).then(realableWallet => {
+            data = {
+                ...data,
+                realableWallet: realableWallet
+            }
+        }).then(() => {
+            getCoinLocked(user.key.address).then(coinLocked => {
+                data = {
+                    ...data,
+                    availableWallet: data.realableWallet - coinLocked
+                };
+                return res.status(200).json(data);
+            });
+        })
+
+    }).catch(err => {
+        console.log(err);
+        return res.status(500).json({msg: "Fail"});
     })
 };
 

@@ -3,7 +3,7 @@ const forEach = require('lodash').forEach;
 
 const { saveBlock, saveTransaction, saveInput, saveOutput } = require('./saveToDb');
 
-const URI_KCOIN_API = "https://api.kcoin.club/";
+const URI_KCOIN_API = require('../config/config-system.json').kcoinUriApi;
 
 module.exports.fetchDataFromKcoin = function () {
     const LIMIT = 100;
