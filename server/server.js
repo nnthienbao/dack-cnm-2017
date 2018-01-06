@@ -9,10 +9,12 @@ const secret = require('./secret.json').jwtSecret;
 // Router
 const authentication = require('./routers/api/authentication');
 const user = require('./routers/api/user');
+const fetchDataFromKcoin= require('./sync-with-kcoin/synchronizeWithKcoin ').fetchDataFromKcoin;
 
 mongoose.connect(config.connectionStringMongo);
 
 //require('./socket/startSocket');
+fetchDataFromKcoin();
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true}));
