@@ -1,8 +1,9 @@
 import React from 'react';
 import {Route} from 'react-router-dom';
-import Login from "./Login";
-import Register from "./Register";
-import ForgotPassword from "./ForgotPassword";
+import RegisterContainer from "../../containers/login/RegisterContainer";
+import LoginContainer from "../../containers/login/LoginContainer";
+import VerifyAccountContainer from "../../containers/login/VerifyAccountContainer";
+import ForgotPasswordContainer from "../../containers/login/ForgotPasswordContainer";
 
 const LoginPage = (props) => (
     <div>
@@ -22,14 +23,15 @@ const LoginPage = (props) => (
                             </div>
                         </div>
                         {/*Form Panel*/}
-                        <Route path="/login" component={Login}/>
-                        <Route path="/register" component={Register}/>
-                        <Route path="/forgot-password" component={ForgotPassword}/>
+                        <Route path="/login" component={LoginContainer}/>
+                        <Route path="/register" component={RegisterContainer}/>
+                        <Route path="/forgot-password" component={ForgotPasswordContainer}/>
+                        <Route path="/verify-account" component={VerifyAccountContainer}/>
                     </div>
                 </div>
             </div>
             <div className="copyrights text-center">
-                <p>Design by <a href="#" className="external">Kcoin</a></p></div>
+                <p>Design by <a className="external">Kcoin</a></p></div>
         </div>
     </div>
 )

@@ -1,0 +1,11 @@
+{
+  "connectionStringMongo": "localhost:27017/dack-cnm-2017",
+  "kcoinUriSocket": "wss://api.kcoin.club",
+  "recaptcha": {
+    "url": "https://www.google.com/recaptcha/api/siteverify",
+    "secret": "6Lf8aj4UAAAAAO2T5US6k2EipuHAR3dicXx8f-_x",
+    "sitekey": "6Lf8aj4UAAAAAAI1X6wFypJkr6PeBfd0FX38XUTO"
+  },
+  "urlClientSide": "http://localhost:3000",
+  "kcoinUriApi": "https://api.kcoin.club/"
+}

@@ -2,3 +2,19 @@
     margin-top:12px;
     margin-bottom: 12px;
 }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+.show-price p {
+    margin: 0 20px;
+}
+
+.verticalLine {
+    border-right: medium solid hsla(200, 10%, 50%,100);
+}

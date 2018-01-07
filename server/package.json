@@ -4,13 +4,27 @@
   "description": "Do an cuoi ky mon Cac cong nghe moi trong phat trien phan mem",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^6.1.4",
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
+    "crypto": "^1.0.1",
     "express": "^4.16.2",
-    "mongoose": "^4.13.7"
+    "jsonwebtoken": "^8.1.0",
+    "lodash": "^4.17.4",
+    "log4js": "^2.4.1",
+    "mongoose": "^4.13.7",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "ursa": "^0.9.4",
+    "validator": "^9.2.0",
+    "ws": "^3.3.3"
+  },
+  "devDependencies": {
+    "mocha": "^4.1.0"
   }
 }
