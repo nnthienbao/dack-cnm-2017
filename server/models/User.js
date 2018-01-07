@@ -33,7 +33,7 @@ let UserSchema = new Schema({
         type: Number,
         default: 0
     },
-    availableWallet: {
+    lockedWallet: {
         type: Number,
         default: 0
     }
