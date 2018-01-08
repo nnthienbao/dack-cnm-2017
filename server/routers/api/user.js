@@ -13,22 +13,7 @@ function loginRequired(req, res, next) {
 }
 
 Router.get('/', loginRequired, function (req, res) {
-    User.findOne({_id: req.user._id}).then(user => {
-        if(!user) return res.sendStatus(401);
-
-        const data = {
-            username: user.username,
-            email: user.email,
-            address: user.key.address,
-            realableWallet: user.realableWallet,
-            availableWallet: user.availableWallet
-        };
-
-        return res.status(200).json(data);
-
-    }).catch(err => {
-        return res.status(500).json({msg: "Fail"});
-    })
+    userController.getUser(req, res);
 });
 
 Router.post('/verify', function (req, res) {

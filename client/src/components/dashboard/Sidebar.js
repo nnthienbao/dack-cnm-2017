@@ -13,10 +13,16 @@ const Sidebar = (props) => (
         {/*Sidebar Navidation Menus*/}
         <ul className="list-unstyled">
             <li>
-                <NavLink activeClassName="active" to="/dashboard/wallet"> <i className="fa fa-money "/>Wallet</NavLink>
+                <NavLink activeClassName="active" to="/dashboard/wallet"> <i className="fa fa-money "/>Ví tiền</NavLink>
             </li>
             <li>
-                <NavLink activeClassName="active" to="/dashboard/transaction"> <i className="fa fa-share"/>Transaction</NavLink>
+                <NavLink activeClassName="active" to="/dashboard/withdraw"> <i className="fa fa-share"/>Rút tiền</NavLink>
+            </li>
+            <li>
+                <NavLink activeClassName="active" to="/dashboard/history/recharge"> <i className="fa fa-history"/>Lịch sử nạp tiền</NavLink>
+            </li>
+            <li>
+                <NavLink activeClassName="active" to="/dashboard/history/withdraw"> <i className="fa fa-history"/>Lịch sử rút tiền</NavLink>
             </li>
         </ul>
     </nav>

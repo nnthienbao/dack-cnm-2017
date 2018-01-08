@@ -9,10 +9,13 @@ const secret = require('./secret.json').jwtSecret;
 // Router
 const authentication = require('./routers/api/authentication');
 const user = require('./routers/api/user');
+const transaction = require('./routers/api/transaction')
+const fetchDataFromKcoin= require('./sync-with-kcoin/synchronizeWithKcoin ').fetchDataFromKcoin;
 
 mongoose.connect(config.connectionStringMongo);
 
 //require('./socket/startSocket');
+fetchDataFromKcoin();
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true}));
@@ -33,6 +36,7 @@ app.use(function (req, res, next) {
 
 app.use('/api', authentication);
 app.use('/api/user', user);
+app.use('/api/transaction', transaction);
 
 
 app.listen(8080, function () {
