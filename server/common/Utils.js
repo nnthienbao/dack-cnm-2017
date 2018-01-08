@@ -254,9 +254,9 @@ module.exports.getTotalCoinOfSystem = function () {
         totalRealableCoin: 0,
         totalAvailableCoin: 0
     };
-    return OutputTransaction.find({}).then(outputList => {
+    return User.find({}).then(listUsers => {
 
-        if (outputList === null)
+        if (listUsers === null)
             return totalCoin;
 
         let transUnconfirms = [];
@@ -264,13 +264,14 @@ module.exports.getTotalCoinOfSystem = function () {
         return request.get(URI_KCOIN_API + 'unconfirmed-transactions').then(res => {
             transUnconfirms = JSON.parse(res);
         }).then(() => {
-            let promises = [];
+            let promiseUsers = [];
+            let promiseOuputs = [];
 
-            forEach(outputList, output => {
-                promises.push(
-                    User.findOne({address: output.lockScript.split(' ')[1]}).then(user => {
-                        if (user) {
-                            return InputTransaction.findOne({
+            forEach(listUsers, user => {
+                promiseUsers.push(
+                    OutputTransaction.find({lockScript: 'ADD ' + user.address}).then(listOutputs => {
+                        forEach(listOutputs, output => {
+                            promiseOuputs.push(InputTransaction.findOne({
                                 referencedOutputHash: output.hash_transaction,
                                 referencedOutputIndex: output.index
                             }).then(input => {
@@ -280,20 +281,21 @@ module.exports.getTotalCoinOfSystem = function () {
                                         totalCoin.totalAvailableCoin += output.value;
                                     }
                                 }
-                            });
-                        }
+                            }));
+                        })
                     }))
             });
 
-            return Promise.all(promises).then(() => {
-                return totalCoin;
+            return Promise.all(promiseUsers).then(() => {
+                return Promise.all(promiseOuputs).then(() => {
+                    return totalCoin;
+                })
             }).catch(err => {
                 console.log(err);
             })
         });
     });
 };
-
 
 
 
