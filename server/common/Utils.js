@@ -5,6 +5,7 @@ const {forEach, findIndex} = require('lodash');
 
 const config = require('../config/config-system.json');
 const TokenVerify = require('../models/TokenVerify');
+const TokenConfirmTransaction = require('../models/TokenConfirmTransaction');
 const OutputTransaction = require('../models/OuputTransaction');
 const InputTransaction = require('../models/InputTransaction');
 
@@ -215,6 +216,17 @@ const isOutputInTransUnConfirm = function(transUnconfirms, output) {
         });
     });
     return false;
+}
+
+
+module.exports.createTokenConfirmTransaction = function (transLocal) {
+    const token = crypto.randomBytes(16).toString('hex');
+    const tokenconfirm = new TokenConfirmTransaction({
+        _transId: transLocal._id,
+        token: token,
+    });
+
+    return tokenconfirm;
 }
 
 

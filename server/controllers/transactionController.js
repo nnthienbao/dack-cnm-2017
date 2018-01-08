@@ -4,7 +4,36 @@ const forEach = require('lodash').forEach;
 // const InputTransaction = require('../models/InputTransaction');
 // const OutputTransaction = require('../models/OuputTransaction');
 const User = require('../models/User');
+const TransactionLocal = require('../models/TransactionLocal');
+const sendConfirmTransaction = require('../common/mailSender').sendConfigTransaction;
+const { KHOI_TAO } = require('../common/statusTransaction');
 const Utils = require('../common/Utils');
+
+
+module.exports.requestCreateTransaction = function (req, res) {
+    const sendValue = parseInt(req.body.value) ;
+    const receiverAddress = req.body.receiverAddress;
+
+    User.findOne({_id: req.user._id}).then(user => {
+        const remainWallet = user.realableWallet - user.lockedWallet;
+        if(remainWallet < sendValue) return res.status(400).json({msg: "Không đủ số dư"});
+
+        let transLocal = new TransactionLocal({
+            _userId: user,
+            value: sendValue,
+            receiverAddress: receiverAddress,
+            status: KHOI_TAO,
+        });
+
+        const tokenConfirm = Utils.createTokenConfirmTransaction(transLocal);
+
+        tokenConfirm.save().then(transLocal.save().then(sendConfirmTransaction(user, tokenConfirm).then(()=> {
+            return res.sendStatus(200);
+        }))).catch(()=> {
+            return res.sendStatus(500);
+        })
+    });
+};
 
 module.exports.createTransaction = function(req, res) {
     const sendValue = parseInt(req.body.sendValue) ;
@@ -12,7 +41,7 @@ module.exports.createTransaction = function(req, res) {
 
     User.findOne({_id: req.user._id}).then(foundUser => {
         const lockScriptUser = 'ADD ' + foundUser.key.address;
-        const remainWallet = foundUser.realableWallet - foundUser.lockedWallet;
+        const remainWallet = foundUser.rfealableWallet - foundUser.lockedWallet;
 
         if (remainWallet >= sendValue) {
 
