@@ -153,10 +153,12 @@ let sign = function (message, privateKeyHex) {
     // Push message to verifier
     signer.update(message);
     // Sign
+
     return signer.sign(privateKey, 'hex');
 };
 
 module.exports.createInputUnlockScript = function(transaction, keys) {
+
     let message = toBinary(transaction, true);
     transaction.inputs.forEach((input, index) => {
         let key = keys[index];
@@ -164,6 +166,7 @@ module.exports.createInputUnlockScript = function(transaction, keys) {
         // Genereate unlock script
         input.unlockScript = 'PUB ' + key.publicKey + ' SIG ' + signature;
     });
+
 };
 
 module.exports.searchOutputNonUsingList = function(lockScript) {
@@ -182,8 +185,8 @@ module.exports.searchOutputNonUsingList = function(lockScript) {
             let promises = [];
 
             forEach(outputList, output => {
-
                 if (isOutputInTransUnConfirm(transUnconfirms, output)) {
+                    console.log(output);
                     return;
                 }
 
@@ -207,17 +210,33 @@ module.exports.searchOutputNonUsingList = function(lockScript) {
 };
 
 const isOutputInTransUnConfirm = function(transUnconfirms, output) {
+    let isIn = false;
     forEach(transUnconfirms, unconfirm => {
         forEach(unconfirm.inputs, input => {
             if (output.hash_transaction === input.referencedOutputHash &&
                 output.index === input.referencedOutputIndex) {
-                return true;
+                isIn = true;
+                return false;
             }
         });
+        if(isIn) return false;
     });
-    return false;
+    return isIn;
 }
 
+module.exports.isEnoughOutputForTransaction = function(sendValue, address) {
+    let count = 0;
+    return this.searchOutputNonUsingList('ADD ' + address).then(outputNonUsingList => {
+        forEach(outputNonUsingList, output => {
+            count += output.value;
+
+            if (count >= sendValue) {
+                return false;
+            }
+        });
+        return count >= sendValue;
+    });
+};
 
 module.exports.createTokenConfirmTransaction = function (transLocal) {
     const token = crypto.randomBytes(16).toString('hex');
