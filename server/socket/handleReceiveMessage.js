@@ -5,6 +5,7 @@ const OutputTransaction = require('../models/OuputTransaction');
 const InputTransaction = require('../models/InputTransaction');
 const Transaction = require('../models/Transaction');
 const TransactionLocal = require('../models/TransactionLocal');
+const { HOAN_THANH } = require('../common/statusTransaction');
 
 module.exports = {
     whenReceiveTransaction: function (data) {
@@ -19,6 +20,10 @@ module.exports = {
                 user.save().catch(err => {
                     console.log(err);
                 })
+                transLocal.status = HOAN_THANH;
+                transLocal.save().catch(err => {
+                    console.log(err);
+                }
             }
             //  Cong tien tu tat ca cac output ma chung ta co mat trong he thong
             else {

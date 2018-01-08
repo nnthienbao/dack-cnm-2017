@@ -80,18 +80,18 @@ module.exports.createTransaction = function(req, res) {
         if (isLocal) {
 
             foundUser.realableWallet -= sendValue;
-            foundUser.save(err => {
+            foundUser.save().catch(err => {
                 console.log(err);
-            })
+            });
 
             User.findOne({address: receiverAddress}).then(receiveUser => {
                 if (receiveUser === null) {
                     return res.sendStatus(404);
                 }
                 receiveUser.realableWallet += sendValue;
-                receiveUser.save(err => {
+                receiveUser.save().catch(err => {
                     console.log(err);
-                })
+                });
                 return res.sendStatus(200);
             }).catch(err => {
                 return res.sendStatus(500);
