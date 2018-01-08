@@ -15,4 +15,8 @@ Router.post('/', loginRequired, (req, res) => {
     transactionController.createTransaction(req, res);
 });
 
+Router.post('/request', loginRequired, (req, res) => {
+    transactionController.requestCreateTransaction(req, res);
+});
+
 module.exports = Router;
