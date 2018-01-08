@@ -14,7 +14,7 @@ const fetchDataFromKcoin= require('./sync-with-kcoin/synchronizeWithKcoin ').fet
 
 mongoose.connect(config.connectionStringMongo);
 
-//require('./socket/startSocket');
+// require('./socket/startSocket');
 fetchDataFromKcoin();
 
 const app = express();

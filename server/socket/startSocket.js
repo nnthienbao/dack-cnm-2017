@@ -14,20 +14,27 @@ log4js.configure({
 const logger = log4js.getLogger('listenSocket');
 
 ws.on('open', function open() {
+
     console.log('WS connect api-kcoin success');
 
     setInterval(function () {
-        ws.send("Send dummy data");
+        ws.send("Send dummy data", err => {
+            if (err) console.log(err);
+        });
         console.log("Send dummy data");
     }, 30000);
 });
 
 ws.on('message', function incoming(data) {
+
     logger.info(data);
+
     if(data.type === "transaction") {
+        console.log("cai nay nay` ban j j oi ...");
         const transaction = data.data;
-        console.log(transaction);
-        whenReceiveTransaction(transaction);
+        if(whenReceiveTransaction(transaction) == false) {
+            console.log('get data error!');
+        };
     }
 });
 
