@@ -194,7 +194,7 @@ module.exports.getUser = function(req, res) {
             getCoinLocked(user.key.address).then(coinLocked => {
                 data = {
                     ...data,
-                    availableWallet: data.realableWallet - coinLocked
+                    lockedWallet: data.realableWallet - coinLocked
                 };
                 return res.status(200).json(data);
             });
