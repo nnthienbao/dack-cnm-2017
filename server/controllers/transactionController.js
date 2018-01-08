@@ -110,12 +110,13 @@ module.exports.createTransaction = function(req, res) {
                 body: newTransaction,
                 json: true
             };
-
-            request(option).then(function(parsedBody) {
+            request(option).then(function(transUnConfirm) {
                 // Cap nhat so du
                 foundUser.lockedWallet += sendValue;
                 // Cap nhat trang thai giao dich
                 transLocal.status = DANG_XU_LY;
+                transLocal.referencedOutputHash = transUnConfirm.hash;
+                transLocal.referencedOutputIndex = 1;
 
                 foundUser.save().then(transLocal.save().then(() => {
                     return res.sendStatus(200);
