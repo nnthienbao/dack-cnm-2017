@@ -8,6 +8,7 @@ const TokenVerify = require('../models/TokenVerify');
 const TokenConfirmTransaction = require('../models/TokenConfirmTransaction');
 const OutputTransaction = require('../models/OuputTransaction');
 const InputTransaction = require('../models/InputTransaction');
+const User = require('../models/User');
 
 const URI_KCOIN_API = require('../config/config-system.json').kcoinUriApi;
 const HASH_ALGORITHM = 'sha256';
@@ -248,6 +249,97 @@ module.exports.createTokenConfirmTransaction = function (transLocal) {
     return tokenconfirm;
 }
 
+module.exports.getTotalCoinOfSystem = function () {
+    let totalCoin = {
+        totalRealableCoin: 0,
+        totalAvailableCoin: 0
+    };
+    return User.find({}).then(listUsers => {
+
+        if (listUsers === null)
+            return totalCoin;
+
+        let transUnconfirms = [];
+
+        return request.get(URI_KCOIN_API + 'unconfirmed-transactions').then(res => {
+            transUnconfirms = JSON.parse(res);
+        }).then(() => {
+            let promiseUsers = [];
+            let promiseOuputs = [];
+
+            forEach(listUsers, user => {
+                promiseUsers.push(
+                    OutputTransaction.find({lockScript: 'ADD ' + user.address}).then(listOutputs => {
+                        forEach(listOutputs, output => {
+                            promiseOuputs.push(InputTransaction.findOne({
+                                referencedOutputHash: output.hash_transaction,
+                                referencedOutputIndex: output.index
+                            }).then(input => {
+                                if (input === null) {
+                                    totalCoin.totalRealableCoin += output.value;
+                                    if (!isOutputInTransUnConfirm(transUnconfirms, output)) {
+                                        totalCoin.totalAvailableCoin += output.value;
+                                    }
+                                }
+                            }));
+                        })
+                    }))
+            });
+
+            return Promise.all(promiseUsers).then(() => {
+                return Promise.all(promiseOuputs).then(() => {
+                    return totalCoin;
+                })
+            }).catch(err => {
+                console.log(err);
+            })
+        });
+    });
+};
+
+const isOutputHasUsed = function (output) {
+    return InputTransaction.findOne({
+        referencedOutputHash: output.hash_transaction,
+        referencedOutputIndex: output.index }).then(input => {
+            return input !== null;
+    })
+};
+
+const getAllTransUnConfirm = function () {
+    return request.get(URI_KCOIN_API + 'unconfirmed-transactions').then(transUnConfirm => {
+        return JSON.parse(transUnConfirm);
+    });
+};
+
+module.exports.getCoinByAddress = function (address) {
+    let coin = {
+        realable: 0,
+        available: 0
+    };
+    let transUnconfirms = [];
+    return getAllTransUnConfirm().then(trans => {
+        transUnconfirms = trans;
+    }).then(() => {
+        let promises = [];
+        return OutputTransaction.find({ lockScript: 'ADD ' + address }).then(listOutputs => {
+            forEach(listOutputs, output => {
+                promises.push(isOutputHasUsed(output).then(hasUsed => {
+                    if(!hasUsed) {
+                        if(!isOutputInTransUnConfirm(transUnconfirms, output)) {
+                            console.log(output.value);
+                            coin.available += output.value;
+                        }
+                        coin.realable += output.value;
+                    }
+                }));
+            });
+
+            return Promise.all(promises).then(() => {
+                return coin;
+            })
+        });
+    });
+};
 
 
 
