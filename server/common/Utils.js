@@ -297,6 +297,50 @@ module.exports.getTotalCoinOfSystem = function () {
     });
 };
 
+const isOutputHasUsed = function (output) {
+    return InputTransaction.findOne({
+        referencedOutputHash: output.hash_transaction,
+        referencedOutputIndex: output.index }).then(input => {
+            return input !== null;
+    })
+};
+
+const getAllTransUnConfirm = function () {
+    return request.get(URI_KCOIN_API + 'unconfirmed-transactions').then(transUnConfirm => {
+        return JSON.parse(transUnConfirm);
+    });
+};
+
+module.exports.getCoinByAddress = function (address) {
+    let coin = {
+        realable: 0,
+        available: 0
+    };
+    let transUnconfirms = [];
+    return getAllTransUnConfirm().then(trans => {
+        transUnconfirms = trans;
+    }).then(() => {
+        let promises = [];
+        return OutputTransaction.find({ lockScript: 'ADD ' + address }).then(listOutputs => {
+            forEach(listOutputs, output => {
+                promises.push(isOutputHasUsed(output).then(hasUsed => {
+                    if(!hasUsed) {
+                        if(!isOutputInTransUnConfirm(transUnconfirms, output)) {
+                            console.log(output.value);
+                            coin.available += output.value;
+                        }
+                        coin.realable += output.value;
+                    }
+                }));
+            });
+
+            return Promise.all(promises).then(() => {
+                return coin;
+            })
+        });
+    });
+};
+
 
 
 
