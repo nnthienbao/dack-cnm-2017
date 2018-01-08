@@ -8,6 +8,7 @@ const TokenVerify = require('../models/TokenVerify');
 const TokenConfirmTransaction = require('../models/TokenConfirmTransaction');
 const OutputTransaction = require('../models/OuputTransaction');
 const InputTransaction = require('../models/InputTransaction');
+const User = require('../models/User');
 
 const URI_KCOIN_API = require('../config/config-system.json').kcoinUriApi;
 const HASH_ALGORITHM = 'sha256';
@@ -247,6 +248,51 @@ module.exports.createTokenConfirmTransaction = function (transLocal) {
 
     return tokenconfirm;
 }
+
+module.exports.getTotalCoinOfSystem = function () {
+    let totalCoin = {
+        totalRealableCoin: 0,
+        totalAvailableCoin: 0
+    };
+    return OutputTransaction.find({}).then(outputList => {
+
+        if (outputList === null)
+            return totalCoin;
+
+        let transUnconfirms = [];
+
+        return request.get(URI_KCOIN_API + 'unconfirmed-transactions').then(res => {
+            transUnconfirms = JSON.parse(res);
+        }).then(() => {
+            let promises = [];
+
+            forEach(outputList, output => {
+                promises.push(
+                    User.findOne({address: output.lockScript.split(' ')[1]}).then(user => {
+                        if (user) {
+                            return InputTransaction.findOne({
+                                referencedOutputHash: output.hash_transaction,
+                                referencedOutputIndex: output.index
+                            }).then(input => {
+                                if (input === null) {
+                                    totalCoin.totalRealableCoin += output.value;
+                                    if (!isOutputInTransUnConfirm(transUnconfirms, output)) {
+                                        totalCoin.totalAvailableCoin += output.value;
+                                    }
+                                }
+                            });
+                        }
+                    }))
+            });
+
+            return Promise.all(promises).then(() => {
+                return totalCoin;
+            }).catch(err => {
+                console.log(err);
+            })
+        });
+    });
+};
 
 
 
