@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Withdraw from "../../components/dashboard/Withdraw";
 import validateTransaction from '../../validation/validateTransaction';
@@ -12,7 +14,8 @@ class WithdrawContainer extends React.Component {
             value: 0,
             receiverAddress: '',
             errors: {},
-            isLoading: false
+            isLoading: false,
+            requestSuccess: false
         };
 
         this.onChange = this.onChange.bind(this);
@@ -42,10 +45,14 @@ class WithdrawContainer extends React.Component {
         if(this.isValid()) {
             // Gui request transaction len server
             this.setState({errors: {}, isLoading: true});
-            userRequestTransaction(data).catch(err => {
+            this.props.userRequestTransaction(this.state).then(() => {
                 this.setState({
-                    errors: err.resolve.data,
-                    isLoading: true
+                    requestSuccess: true
+                })
+            }).catch(err => {
+                this.setState({
+                    errors: err.response.data,
+                    isLoading: false
                 })
             })
         }
@@ -58,6 +65,7 @@ class WithdrawContainer extends React.Component {
                 receiverAddress={this.state.receiverAddress}
                 errors={this.state.errors}
                 isLoading={this.state.isLoading}
+                requestSuccess={this.state.requestSuccess}
                 onChange={this.onChange}
                 onSubmit={this.onSubmit}
             />
@@ -65,4 +73,8 @@ class WithdrawContainer extends React.Component {
     }
 }
 
-export default WithdrawContainer;
+WithdrawContainer.propTypes = {
+    userRequestTransaction: PropTypes.func.isRequired
+}
+
+export default connect(state => { return {} }, { userRequestTransaction })(WithdrawContainer);

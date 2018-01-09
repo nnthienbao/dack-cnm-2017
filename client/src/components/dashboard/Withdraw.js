@@ -2,7 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 
 const Withdraw = (props) => {
-    const { value, receiverAddress, errors, isLoading, onChange, onSubmit } = props;
+    const { value, receiverAddress, errors, isLoading, requestSuccess, onChange, onSubmit } = props;
     return (
         <div>
             <header className="page-header">
@@ -19,6 +19,22 @@ const Withdraw = (props) => {
                                 <div className="card-header d-flex align-items-center">
                                     <h3 className="h4">Thông tin</h3>
                                 </div>
+                                { requestSuccess &&
+                                    <div className="alert alert-success">
+                                        <strong>
+                                            Gửi yêu cầu rút tiền thành công. Mời bạn xác thực giao dịch chuyển tiền qua email
+                                        </strong>
+                                    </div>
+                                }
+
+                                { errors.error &&
+                                <div className="alert alert-danger">
+                                    <strong>
+                                        {errors.error}
+                                    </strong>
+                                </div>
+                                }
+
                                 <div className="card-body">
                                     <form onSubmit={onSubmit} className="form-horizontal">
                                         <div className="form-group row">
