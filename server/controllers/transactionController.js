@@ -7,7 +7,7 @@ const User = require('../models/User');
 const TransactionLocal = require('../models/TransactionLocal');
 const TokenConfirmTransacion = require('../models/TokenConfirmTransaction');
 const sendConfirmTransaction = require('../common/mailSender').sendConfigTransaction;
-const { KHOI_TAO, DANG_XU_LY } = require('../common/statusTransaction');
+const { KHOI_TAO, DANG_XU_LY, HOAN_THANH } = require('../common/statusTransaction');
 const Utils = require('../common/Utils');
 const validateTransacton = require('../validation/validateTransaction').default;
 
@@ -73,7 +73,8 @@ module.exports.createTransaction = function(req, res) {
     };
 
     TokenConfirmTransacion.findOne({token: token}).populate(populateOption).then((tokenConfirm) => {
-        if(tokenConfirm === null) return res.status(400).json({msg: "Không tìm thấy token"});
+        if(tokenConfirm === null) return res.status(400).json({error: "Không tìm thấy token"});
+        if(tokenConfirm._transId.status !== KHOI_TAO) return res.status(400).json({ error: "Giao dịch đã được xử lý" });
 
         const transLocal = tokenConfirm._transId;
         const foundUser = transLocal._userId;
@@ -82,22 +83,24 @@ module.exports.createTransaction = function(req, res) {
         const lockScriptUser = 'ADD ' + foundUser.key.address;
         const isLocal = transLocal.isLocal;
 
-        if (!isLocal) {
-
-            foundUser.realableWallet -= sendValue;
-            foundUser.save().catch(err => {
-                console.log(err);
-            });
-
+        if (isLocal) {
             User.findOne({address: receiverAddress}).then(receiveUser => {
                 if (receiveUser === null) {
                     return res.sendStatus(404);
                 }
+                // Cap nhat lai so tien nguoi gui va nhan
+                foundUser.realableWallet -= sendValue;
                 receiveUser.realableWallet += sendValue;
-                receiveUser.save().catch(err => {
+
+                // Cap nhat trang thai giao dich
+                transLocal.status = HOAN_THANH;
+
+                foundUser.save().then(receiveUser.save().then(transLocal.save().then(() => {
+                    return res.sendStatus(200);
+                }))).catch(err => {
                     console.log(err);
+                    return res.sendStatus(500);
                 });
-                return res.sendStatus(200);
             }).catch(err => {
                 return res.sendStatus(500);
             });

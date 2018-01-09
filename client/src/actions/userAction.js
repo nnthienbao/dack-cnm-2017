@@ -82,6 +82,12 @@ export function userRequestTransaction(data) {
     }
 }
 
+export function userConfirmTransaction(data) {
+    return dispatch => {
+        return axios.post('/api/transaction', data);
+    }
+}
+
 
 
 

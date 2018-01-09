@@ -47,7 +47,8 @@ class WithdrawContainer extends React.Component {
             this.setState({errors: {}, isLoading: true});
             this.props.userRequestTransaction(this.state).then(() => {
                 this.setState({
-                    requestSuccess: true
+                    requestSuccess: true,
+                    isLoading: false
                 })
             }).catch(err => {
                 this.setState({
