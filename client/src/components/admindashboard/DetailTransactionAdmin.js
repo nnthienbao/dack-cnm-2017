@@ -1,11 +1,13 @@
 import React from 'react';
 
 const DetailTransactionAdmin = (props) => {
+    const { ref, value, userSend, referencedOutputHash,
+        referencedOutputIndex, receiverAddress, status } = props.trans;
     return (
         <div>
             <header className="page-header">
                 <div className="container-fluid">
-                    <h2 className="no-margin-bottom">Chi tiết giao dịch 5a514a374e1d8d325040e8f8</h2>
+                    <h2 className="no-margin-bottom">Chi tiết giao dịch {ref}</h2>
                 </div>
             </header>
 
@@ -19,32 +21,32 @@ const DetailTransactionAdmin = (props) => {
                                         <tbody>
                                         <tr>
                                             <td>Tham chiếu giao dịch</td>
-                                            <td>5a514a374e1d8d325040e8f8</td>
+                                            <td>{ref}</td>
                                         </tr>
                                         <tr>
                                             <td>Số tiền</td>
-                                            <td>100</td>
+                                            <td>{value}</td>
                                         </tr>
                                         <tr>
                                             <td>Người dùng</td>
-                                            <td>nnthienbao</td>
+                                            <td>{userSend}</td>
                                         </tr>
                                         <tr>
                                             <td>referencedOutputHash</td>
-                                            <td>00000000000000000000000000000000</td>
+                                            <td>{referencedOutputHash}</td>
                                         </tr>
                                         <tr>
                                             <td>referencedOutputIndex</td>
-                                            <td>1</td>
+                                            <td>{referencedOutputIndex}</td>
                                         </tr>
                                         <tr>
                                             <td>Địa chỉ nhận</td>
-                                            <td>e813260dc0015f9bc91abd9fc3e3bd1e3120d9540d70df3b512a3ce89cefb4f3</td>
+                                            <td>{receiverAddress}</td>
                                         </tr>
                                         <tr>
                                             <td>Trạng thái</td>
                                             <td>
-                                                Khởi tạo
+                                                {status}
                                             </td>
                                         </tr>
                                         </tbody>

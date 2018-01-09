@@ -1,6 +1,7 @@
 import React from 'react';
 
 const StatisticsAdmin = (props) => {
+    const { totalUser, totalRealableCoin, totalAvailableCoin } = props;
     return (
         <div>
             <header className="page-header">
@@ -18,15 +19,15 @@ const StatisticsAdmin = (props) => {
                                         <tbody>
                                         <tr>
                                             <td>Số người dùng</td>
-                                            <td>51238</td>
+                                            <td>{totalUser}</td>
                                         </tr>
                                         <tr>
                                             <td>Số dư thực tế</td>
-                                            <td>1000636 KCO</td>
+                                            <td>{totalRealableCoin} KCO</td>
                                         </tr>
                                         <tr>
                                             <td>Só dư khả dụng</td>
-                                            <td>60000 KCO</td>
+                                            <td>{totalAvailableCoin} KCO</td>
                                         </tr>
                                         </tbody>
                                     </table>

@@ -29,4 +29,8 @@ Router.get('/list/address', adminRequired, (req, res) => {
     adminController.getListAddress(req, res);
 });
 
+Router.get('/transaction/:ref', adminRequired, (req, res) => {
+    adminController.getInfoTransaction(req, res);
+});
+
 module.exports = Router;

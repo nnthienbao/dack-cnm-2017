@@ -1,8 +1,16 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
-import { Link } from 'react-router-dom';
 
 const ListUsersAdmin = (props) => {
+    const {listUsers, totalPage, onPageChange} = props;
+    const listUsersView = listUsers.map((user, key) => (
+        <tr key={key}>
+            <td className="text-center">{user.username}</td>
+            <td className="text-center">{user.email}</td>
+            <td className="text-center">{user.coin.realable}</td>
+            <td className="text-center">{user.coin.available}</td>
+        </tr>
+    ));
     return (
         <div>
             <header className="page-header">
@@ -27,24 +35,9 @@ const ListUsersAdmin = (props) => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td className="text-center">nnthienbao</td>
-                                            <td className="text-center">nnthienbao040@gmail.com</td>
-                                            <td className="text-center">200</td>
-                                            <td className="text-center">300</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="text-center">nnthienbao</td>
-                                            <td className="text-center">nnthienbao040@gmail.com</td>
-                                            <td className="text-center">200</td>
-                                            <td className="text-center">300</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="text-center">nnthienbao</td>
-                                            <td className="text-center">nnthienbao040@gmail.com</td>
-                                            <td className="text-center">200</td>
-                                            <td className="text-center">300</td>
-                                        </tr>
+                                        {
+                                            listUsersView
+                                        }
                                         </tbody>
                                     </table>
 
@@ -54,7 +47,7 @@ const ListUsersAdmin = (props) => {
                                             nextLabel={"next"}
                                             breakLabel={"..."}
                                             breakClassName={"break-me"}
-                                            pageCount={10}
+                                            pageCount={totalPage}
                                             marginPagesDisplayed={2}
                                             pageRangeDisplayed={4}
                                             containerClassName={"pagination justify-content-center"}
@@ -65,6 +58,8 @@ const ListUsersAdmin = (props) => {
                                             nextLinkClassName={"page-link"}
                                             previousClassName={"page-item"}
                                             activeClassName={"active"}
+                                            onPageChange={onPageChange}
+                                            hrefBuilder={()=> { return (<a href="#"/>) }}
                                         />
                                     </div>
                                 </div>
