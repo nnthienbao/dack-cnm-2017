@@ -21,12 +21,6 @@ const HeaderAdmin = (props) => {
                                     <p>{username}</p>
                                 </div>
                             </li>
-                            {/*Notifications*/}
-                            <li className="nav-item dropdown">
-                                <a id="notifications" rel="nofollow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" className="nav-link">
-                                    <i className="fa fa-bell-o"/><span className="badge bg-red">12</span>
-                                </a>
-                            </li>
                             {/*Logout*/}
                             <li className="nav-item">
                                 <a href="#" onClick={props.logout} className="nav-link logout">Logout<i className="fa fa-sign-out"/></a>

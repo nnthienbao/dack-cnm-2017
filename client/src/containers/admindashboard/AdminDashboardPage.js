@@ -7,11 +7,11 @@ import HeaderAdmin from "../../components/admindashboard/HeaderAdmin";
 import SidebarAdmin from "../../components/admindashboard/SidebarAdmin";
 import Footer from "../../components/dashboard/Footer";
 import { logout, userRequestGetInfo  } from '../../actions/userAction';
-import StatisticsAdmin from "../../components/admindashboard/StatisticsAdmin";
-import ListUsersAdmin from "../../components/admindashboard/ListUsersAdmin";
-import ListTransactionsAdmin from "../../components/admindashboard/ListTransactionsAdmin";
-import DetailTransactionAdmin from "../../components/admindashboard/DetailTransactionAdmin";
-import ListAddressAdmin from "../../components/admindashboard/ListAddressAdmin";
+import StatisticsAdminContainer from "./StatisticsAdminContainer";
+import ListUsersAdminContainer from "./ListUsersAdminContainer";
+import ListTransactionAdminContainer from "./ListTransactionAdminContainer";
+import DetailTransactionAdminContainer from "./DetailTransactionAdminContainer";
+import ListAddressAdminContainer from "./ListAddressAdminContainer";
 
 class AdminDashboardPage extends React.Component {
     constructor(props) {
@@ -33,11 +33,11 @@ class AdminDashboardPage extends React.Component {
                     <SidebarAdmin/>
                     <div className="content-inner">
                         <Route exact path={`${match.url}`} render={() => <Redirect to="/admin-dashboard/statistics"/>}/>
-                        <Route path={`${match.url}/statistics`} component={StatisticsAdmin}/>
-                        <Route path={`${match.url}/users`} component={ListUsersAdmin}/>
-                        <Route exact path={`${match.url}/transactions`} component={ListTransactionsAdmin}/>
-                        <Route exact path={`${match.url}/transactions/detail`} component={DetailTransactionAdmin}/>
-                        <Route path={`${match.url}/address`} component={ListAddressAdmin}/>
+                        <Route path={`${match.url}/statistics`} component={StatisticsAdminContainer}/>
+                        <Route path={`${match.url}/users`} component={ListUsersAdminContainer}/>
+                        <Route exact path={`${match.url}/transactions`} component={ListTransactionAdminContainer}/>
+                        <Route exact path={`${match.url}/transactions/detail/:ref`} component={DetailTransactionAdminContainer}/>
+                        <Route path={`${match.url}/address`} component={ListAddressAdminContainer}/>
                         {/*Page Footer*/}
                         <Footer/>
                     </div>
