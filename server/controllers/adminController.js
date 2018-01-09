@@ -13,7 +13,7 @@ module.exports.getStatistics = function (req, res) {
         totalAvailableCoin: 0
     };
 
-    User.find({}).then(listUsers => {
+    User.find({isAdmin: undefined}).then(listUsers => {
         statistic.totalUser = listUsers.length;
         Utils.getTotalCoinOfSystem().then(totalCoin => {
             statistic.totalRealableCoin = totalCoin.totalRealableCoin;
@@ -42,19 +42,20 @@ module.exports.getInfoUserAccount = function (req, res) {
 
     let userInfos = [];
 
-    return User.find({}, {}, option).then(listUsers => {
-
-        forEach(listUsers, user => {
-            userInfos.push({
-                username: user.username,
-                coin: {
-                    realable: user.realableWallet,
-                    available: user.realableWallet - user.lockedWallet
-                }
+    return User.find({isAdmin: undefined}, {}, option).then(listUsers => {
+        return User.count({isAdmin: undefined}).then(totalItem => {
+            forEach(listUsers, user => {
+                userInfos.push({
+                    username: user.username,
+                    email: user.email,
+                    coin: {
+                        realable: user.realableWallet,
+                        available: user.realableWallet - user.lockedWallet
+                    }
+                });
             });
+            return res.header('total-item', totalItem).status(200).json(userInfos);
         });
-
-        return res.status(200).json(userInfos);
     }).catch(err => {
         console.log(err);
         return res.sendStatus(500);
