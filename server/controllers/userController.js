@@ -14,6 +14,7 @@ module.exports.createUser = function (req, res) {
     let user = new User(req.body);
     user.hashPassword = bcrypt.hashSync(req.body.password, 10);
     user.key = key;
+    user.address = key.address;
 
     user.save(function (err) {
         if(err) {
