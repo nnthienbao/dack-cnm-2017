@@ -23,4 +23,8 @@ Router.get('/:ref', loginRequired, (req, res) => {
     transactionController.getInfoTransaction(req, res);
 });
 
+Router.delete('/:ref', loginRequired, (req, res) => {
+    transactionController.deleteTransaction(req, res);
+});
+
 module.exports = Router;

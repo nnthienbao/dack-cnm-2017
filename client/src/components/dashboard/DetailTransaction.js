@@ -4,6 +4,7 @@ import moment from 'moment';
 const DetailTransaction = (props) => {
     const { ref, value, createAt, receiverAddress,
         referencedOutputHash, referencedOutputIndex, status } = props.trans;
+    const { onCancelTrans, errors } = props;
     return (
         <div>
             <header className="page-header">
@@ -11,7 +12,11 @@ const DetailTransaction = (props) => {
                     <h2 className="no-margin-bottom">Chi tiết giao dịch {ref}</h2>
                 </div>
             </header>
-
+            { errors.error &&
+            <div className="alert alert-danger">
+                {errors.error}
+            </div>
+            }
             <section className="tables">
                 <div className="container-fluid">
                     <div className="row">
@@ -48,6 +53,7 @@ const DetailTransaction = (props) => {
                                             <td>Trạng thái</td>
                                             <td>
                                                 {status}
+                                                {status === "Khởi tạo" && <a style={{marginLeft:4, padding:6}} onClick={() => onCancelTrans(ref)} href="#" className="badge badge-danger">Hủy</a>}
                                             </td>
                                         </tr>
                                         </tbody>

@@ -273,3 +273,28 @@ module.exports.getInfoTransaction = function (req, res) {
         return res.sendStatus(500);
     })
 };
+
+module.exports.deleteTransaction = function (req, res) {
+    const ref = req.params.ref;
+    TransactionLocal.findOne({ _id: ref }).then(transLocal => {
+        if(transLocal === null) {
+            return res.status(400).json({error: "Không tìm thấy giao dịch"});
+        }
+        if(transLocal.status !== KHOI_TAO) {
+            return res.status(400).json({error: "Không được hủy giao dịch đã xác nhận"});
+        }
+        if(transLocal._userId.toString() !== req.user._id) {
+            console.log(transLocal._userId);
+            return res.sendStatus(403);
+        }
+
+        transLocal.remove().then(() => {
+            return res.sendStatus(200);
+        }).catch(err => {
+            return res.sendStatus(500);
+        })
+    }).catch(err => {
+        console.log(err);
+        return res.sendStatus(500);
+    })
+};

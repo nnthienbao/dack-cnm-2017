@@ -106,6 +106,12 @@ export function getInfoTransaction(ref) {
     }
 }
 
+export function userRequestCancelTransaction(ref) {
+    return dispatch => {
+        return axios.delete(`/api/transaction/${ref}`);
+    }
+}
+
 
 
 

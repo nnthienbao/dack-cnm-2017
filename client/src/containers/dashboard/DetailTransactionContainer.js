@@ -3,13 +3,29 @@ import {connect} from 'react-redux';
 import PropsType from 'prop-types';
 
 import DetailTransaction from "../../components/dashboard/DetailTransaction";
-import {getInfoTransaction} from '../../actions/userAction';
+import {getInfoTransaction, userRequestCancelTransaction} from '../../actions/userAction';
 
 class DetailTransactionContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            trans: {}
+            trans: {},
+            errors: {}
+        };
+
+        this.onCancelTrans = this.onCancelTrans.bind(this);
+    }
+
+    onCancelTrans(ref) {
+        if(window.confirm("Bạn có chắc muốn hủy giao dịch này?")) {
+            // Huy giao dich
+            this.props.userRequestCancelTransaction(ref).then(res => {
+                this.props.history.push('/dashboard/history/withdraw')
+            }).catch(err => {
+                this.setState({
+                    errors: err.response.data
+                })
+            })
         }
     }
 
@@ -28,13 +44,16 @@ class DetailTransactionContainer extends React.Component {
         return (
             <DetailTransaction
                 trans={this.state.trans}
+                errors={this.state.errors}
+                onCancelTrans={this.onCancelTrans}
             />
         )
     }
 }
 
 DetailTransactionContainer.propTypes = {
-    getInfoTransaction: PropsType.func.isRequired
+    getInfoTransaction: PropsType.func.isRequired,
+    userRequestCancelTransaction: PropsType.func.isRequired
 };
 
-export default connect(state => { return {} }, { getInfoTransaction })(DetailTransactionContainer);
+export default connect(state => { return {} }, { getInfoTransaction, userRequestCancelTransaction })(DetailTransactionContainer);
