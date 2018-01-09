@@ -8,6 +8,7 @@ let TransactionLocalSchema = new Schema({
     status: { type: String, required: true },
     referencedOutputHash: { type: String },
     referencedOutputIndex: { type: Number },
+    isLocal: { type: Boolean, required: true },
     createdAt: { type: Date, required: true, default: Date.now }
 });
 

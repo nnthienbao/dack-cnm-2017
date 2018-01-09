@@ -170,7 +170,24 @@ module.exports.createInputUnlockScript = function(transaction, keys) {
 
 };
 
-module.exports.searchOutputNonUsingList = function(lockScript) {
+module.exports.getAllUserLockScript = function() {
+
+    return User.find().then(users => {
+
+        let allLockScript = [];
+
+        forEach(users, user => {
+
+            let lockScript = "ADD " + user.address;
+            allLockScript.push(lockScript);
+
+        });
+
+        return allLockScript;
+    });
+}
+
+module.exports.searchOutputNonUsingEachLockScript = function(lockScript) {
 
     return OutputTransaction.find({lockScript: lockScript}).then(outputList => {
 
@@ -210,6 +227,63 @@ module.exports.searchOutputNonUsingList = function(lockScript) {
     });
 };
 
+module.exports.searchOutputNonUsingList = function() {
+
+    return this.getAllUserLockScript().then((allUserLockScript) => {
+
+        let outputNonUsingList = [];
+        let promises = [];
+
+        forEach(allUserLockScript, (lockScript)=> {
+
+            promises.push(this.searchOutputNonUsingEachLockScript(lockScript).then((outputList) => {
+                let List = [];
+                forEach(outputList, (output) => {
+
+                    List.push(output);
+                })
+                return List;
+            }).then(NonUsingList => {
+                forEach(NonUsingList, output => {
+                    outputNonUsingList.push(output);
+                })
+            }));
+        })
+
+        return Promise.all(promises).then(() => {
+            return outputNonUsingList;
+        }).catch(err => {
+            console.log(err);
+        });
+    });
+}
+
+module.exports.findKeyByOutput = function(output) {
+
+    let address = output.lockScript.split(" ")[1];
+    return User.findOne({address: address}).then(user => {
+        return user.key;
+    })
+}
+
+module.exports.sortKey = function(outputs, keys) {
+
+    let newKeys = [];
+
+    for (let i = 0; i < outputs.length; i++) {
+        let address = outputs[i].lockScript.split(" ")[1];
+
+        for (let j = 0; j < keys.length; j++) {
+            if (keys[j].address === address) {
+                newKeys.push(keys[j]);
+                break;
+            }
+        }
+    }
+
+    return newKeys;
+}
+
 const isOutputInTransUnConfirm = function(transUnconfirms, output) {
     let isIn = false;
     forEach(transUnconfirms, unconfirm => {
@@ -225,9 +299,9 @@ const isOutputInTransUnConfirm = function(transUnconfirms, output) {
     return isIn;
 }
 
-module.exports.isEnoughOutputForTransaction = function(sendValue, address) {
+module.exports.isEnoughOutputForTransaction = function(sendValue) {
     let count = 0;
-    return this.searchOutputNonUsingList('ADD ' + address).then(outputNonUsingList => {
+    return this.searchOutputNonUsingList().then(outputNonUsingList => {
         forEach(outputNonUsingList, output => {
             count += output.value;
 
@@ -339,6 +413,7 @@ module.exports.getCoinByAddress = function (address) {
         });
     });
 };
+
 
 
 

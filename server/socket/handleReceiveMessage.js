@@ -23,7 +23,7 @@ module.exports = {
                 transLocal.status = HOAN_THANH;
                 transLocal.save().catch(err => {
                     console.log(err);
-                }
+                });
             }
             //  Cong tien tu tat ca cac output ma chung ta co mat trong he thong
             else {
