@@ -182,24 +182,12 @@ module.exports.getUser = function(req, res) {
         let data = {
             username: user.username,
             email: user.email,
-            address: user.key.address,
+            address: user.address,
+            realableWallet: user.realableWallet,
+            availableWallet: user.realableWallet - user.lockedWallet
         };
 
-        // Tim so du thuc te va kha dung
-        getRealableWallet(user.key.address).then(realableWallet => {
-            data = {
-                ...data,
-                realableWallet: realableWallet
-            }
-        }).then(() => {
-            getCoinLocked(user.key.address).then(coinLocked => {
-                data = {
-                    ...data,
-                    lockedWallet: data.realableWallet - coinLocked
-                };
-                return res.status(200).json(data);
-            });
-        })
+        return res.status(200).json(data);
 
     }).catch(err => {
         console.log(err);

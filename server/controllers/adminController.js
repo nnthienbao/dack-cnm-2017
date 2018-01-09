@@ -112,10 +112,10 @@ module.exports.getListAddress = function (req, res) {
                     })
                 })
             );
-            return Promise.all(promises).then(() => {
-                return res.status(200).json(listAddress);
-            });
-        })
+        });
+        return Promise.all(promises).then(() => {
+            return res.status(200).json(listAddress);
+        });
     }).catch(err => {
         console.log(err);
         return res.sendStatus(500);

@@ -14,8 +14,12 @@ import setAuthorizationToken from './Utils/setAuthorizationToken';
 import {setCurrentUser} from './actions/userAction';
 
 if(localStorage.jwtToken) {
-    setAuthorizationToken(localStorage.jwtToken);
-    store.dispatch(setCurrentUser(jwt_decode(localStorage.jwtToken)));
+    const decode = jwt_decode(localStorage.jwtToken);
+    if(decode.exp > new Date().getTime() / 1000 + 60) {
+        setAuthorizationToken(localStorage.jwtToken);
+        store.dispatch(setCurrentUser(decode));
+    }
+
 }
 
 ReactDOM.render(

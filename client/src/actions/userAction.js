@@ -11,6 +11,7 @@ export function userRegisterRequest(user) {
 }
 
 export function setCurrentUser(user) {
+    console.log(user);
     return {
         type: SET_CURRENT_USER,
         user
@@ -73,6 +74,42 @@ export function userRequestGetInfo() {
         return axios.get('/api/user', {}).then(res => {
             dispatch(setInfoUserAuth(res.data));
         })
+    }
+}
+
+export function userRequestTransaction(data) {
+    return dispatch => {
+        return axios.post('/api/transaction/request', data);
+    }
+}
+
+export function userConfirmTransaction(data) {
+    return dispatch => {
+        return axios.post('/api/transaction', data);
+    }
+}
+
+export function userGetRechargeHistory() {
+    return dispatch => {
+        return axios.get('/api/history/recharge')
+    }
+}
+
+export function userGetWithdrawHistory() {
+    return dispatch => {
+        return axios.get('/api/history/withdraw')
+    }
+}
+
+export function getInfoTransaction(ref) {
+    return dispatch => {
+        return axios.get(`/api/transaction/${ref}`);
+    }
+}
+
+export function userRequestCancelTransaction(ref) {
+    return dispatch => {
+        return axios.delete(`/api/transaction/${ref}`);
     }
 }
 
