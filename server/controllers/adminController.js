@@ -74,16 +74,19 @@ module.exports.getListTransaction = function (req, res) {
 
     let transactions = [];
     TransactionLocal.find({}, {}, option).populate('_userId').then(listTrans => {
-        forEach(listTrans, trans => {
-            transactions.push({
-                username: trans._userId.username,
-                value: trans.value,
-                status: trans.status,
-                referencedOutputHash: trans.referencedOutputHash,
-                referencedOutputIndex: trans.referencedOutputIndex
-            })
+        return TransactionLocal.count().then(totalItem => {
+            forEach(listTrans, trans => {
+                transactions.push({
+                    ref: trans._id,
+                    username: trans._userId.username,
+                    value: trans.value,
+                    status: trans.status,
+                    referencedOutputHash: trans.referencedOutputHash,
+                    referencedOutputIndex: trans.referencedOutputIndex
+                })
+            });
+            return res.header('total-item', totalItem).status(200).json(transactions);
         });
-        return res.status(200).json(transactions);
     }).catch(err => {
         console.log(err);
         return res.sendStatus(500);

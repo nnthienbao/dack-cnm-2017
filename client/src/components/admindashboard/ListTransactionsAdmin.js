@@ -3,6 +3,16 @@ import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 
 const ListTransactionsAdmin = (props) => {
+    const {listTrans, totalPage, onPageChange} = props;
+    const listTransViews = listTrans.map((trans, key) => (
+        <tr key={key}>
+            <td className="text-center"><Link to={`/admin-dashboard/transactions/detail`}>{trans.ref}</Link></td>
+            <td className="text-center">{trans.username}</td>
+            <td className="text-center">{trans.value}</td>
+            <td className="text-center">{trans.status}</td>
+        </tr>
+    ));
+
     return (
         <div>
             <header className="page-header">
@@ -21,24 +31,15 @@ const ListTransactionsAdmin = (props) => {
                                         <thead>
                                         <tr>
                                             <th className="text-center">Tham chiếu</th>
-                                            <th className="text-center">Người dùng</th>
+                                            <th className="text-center">Người gửi</th>
                                             <th className="text-center">Số tiền</th>
                                             <th className="text-center">Trạng thái</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td className="text-center"><Link to={`/admin-dashboard/transactions/detail`}>5a514a374e1d8d325040e8f8</Link></td>
-                                            <td className="text-center">nnthienbao</td>
-                                            <td className="text-center">200</td>
-                                            <td className="text-center">Khởi tạo</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="text-center"><Link to={`/admin-dashboard/transactions/detail`}>5a514a374e1d8d325040e8f8</Link></td>
-                                            <td className="text-center">nnthienbao</td>
-                                            <td className="text-center">200</td>
-                                            <td className="text-center">Khởi tạo</td>
-                                        </tr>
+                                        {
+                                            listTransViews
+                                        }
                                         </tbody>
                                     </table>
 
@@ -47,7 +48,7 @@ const ListTransactionsAdmin = (props) => {
                                         nextLabel={"next"}
                                         breakLabel={"..."}
                                         breakClassName={"break-me"}
-                                        pageCount={10}
+                                        pageCount={totalPage}
                                         marginPagesDisplayed={2}
                                         pageRangeDisplayed={4}
                                         containerClassName={"pagination justify-content-center"}
@@ -58,6 +59,8 @@ const ListTransactionsAdmin = (props) => {
                                         nextLinkClassName={"page-link"}
                                         previousClassName={"page-item"}
                                         activeClassName={"active"}
+                                        onPageChange={onPageChange}
+                                        hrefBuilder={() => (<a href="#"/>)}
                                     />
                                 </div>
                             </div>

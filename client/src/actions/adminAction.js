@@ -11,3 +11,9 @@ export function adminRequestGetListUser(page, limit) {
         return axios.get(`/api/admin/list/user-account?page=${page}&limit=${limit}`);
     }
 }
+
+export function adminRequestGetListTransactionHistory(page, limit) {
+    return dispatch => {
+        return axios.get(`/api/admin/list/transaction?page=${page}&limit=${limit}`);
+    }
+}
