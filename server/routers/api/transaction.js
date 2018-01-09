@@ -19,4 +19,8 @@ Router.post('/request', loginRequired, (req, res) => {
     transactionController.requestCreateTransaction(req, res);
 });
 
+Router.get('/:ref', loginRequired, (req, res) => {
+    transactionController.getInfoTransaction(req, res);
+});
+
 module.exports = Router;

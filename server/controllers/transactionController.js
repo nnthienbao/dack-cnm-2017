@@ -256,3 +256,20 @@ module.exports.createTransaction = function(req, res) {
         }
     });
 };
+
+module.exports.getInfoTransaction = function (req, res) {
+    const ref = req.params.ref;
+    TransactionLocal.findOne({ _id: ref }).then(transLocal => {
+        return res.status(200).json({
+            ref: transLocal._id,
+            value: transLocal.value,
+            createAt: transLocal.createdAt,
+            receiverAddress: transLocal.receiverAddress,
+            referencedOutputHash: transLocal.referencedOutputHash,
+            referencedOutputIndex: transLocal.referencedOutputIndex,
+            status: transLocal.status
+        })
+    }).catch(err => {
+        return res.sendStatus(500);
+    })
+};

@@ -88,6 +88,18 @@ export function userConfirmTransaction(data) {
     }
 }
 
+export function userGetRechargeHistory() {
+    return dispatch => {
+        return axios.get('/api/history/recharge')
+    }
+}
+
+export function getInfoTransaction(ref) {
+    return dispatch => {
+        return axios.get(`/api/transaction/${ref}`);
+    }
+}
+
 
 
 
