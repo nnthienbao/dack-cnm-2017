@@ -400,7 +400,6 @@ module.exports.getCoinByAddress = function (address) {
                 promises.push(isOutputHasUsed(output).then(hasUsed => {
                     if(!hasUsed) {
                         if(!isOutputInTransUnConfirm(transUnconfirms, output)) {
-                            console.log(output.value);
                             coin.available += output.value;
                         }
                         coin.realable += output.value;

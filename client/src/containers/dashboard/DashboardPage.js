@@ -6,12 +6,12 @@ import PropTypes from 'prop-types';
 import Header from "../../components/dashboard/Header";
 import Sidebar from "../../components/dashboard/Sidebar";
 import Footer from "../../components/dashboard/Footer";
-import Withdraw from "../../components/dashboard/Withdraw";
 import { logout, userRequestGetInfo  } from '../../actions/userAction';
 import WalletContainer from "./WalletContainer";
-import WithDrawHitory from "../../components/dashboard/WithDrawHistory";
-import RechargeHistory from "../../components/dashboard/RechargeHistory";
-import DetailTransaction from "../../components/dashboard/DetailTransaction";
+import WithdrawContainer from "./WithdrawContainer";
+import RechargeHistoryContainer from "./RechargeHistoryContainer";
+import DetailTransactionContainer from "./DetailTransactionContainer";
+import WithDrawHistoryContainer from "./WithDrawHistoryContainer";
 
 class DashboardPage extends React.Component {
     constructor(props) {
@@ -35,10 +35,10 @@ class DashboardPage extends React.Component {
                         {/*Page Header*/}
                         <Route exact path={`${match.url}`} render={() => <Redirect to="/dashboard/wallet"/>}/>
                         <Route path={`${match.url}/wallet`} component={WalletContainer}/>
-                        <Route exact path={`${match.url}/withdraw`} component={Withdraw}/>
-                        <Route path={`${match.url}/history/withdraw`} component={WithDrawHitory}/>
-                        <Route path={`${match.url}/history/recharge`} component={RechargeHistory}/>
-                        <Route path={`${match.url}/transaction/detail`} component={DetailTransaction}/>
+                        <Route exact path={`${match.url}/withdraw`} component={WithdrawContainer}/>
+                        <Route path={`${match.url}/history/withdraw`} component={WithDrawHistoryContainer}/>
+                        <Route path={`${match.url}/history/recharge`} component={RechargeHistoryContainer}/>
+                        <Route path={`${match.url}/transaction/detail/:ref`} component={DetailTransactionContainer}/>
                         {/*Page Footer*/}
                         <Footer/>
                     </div>

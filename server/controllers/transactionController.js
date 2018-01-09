@@ -1,6 +1,6 @@
 const request = require('request-promise');
 const forEach = require('lodash').forEach;
-const promisesBluebird = require('bluebird');
+const { saveSendTransactionToLog, saveLocalTransactionToLog} = require('../log/saveLogTransaction');
 
 // const InputTransaction = require('../models/InputTransaction');
 // const OutputTransaction = require('../models/OuputTransaction');
@@ -8,17 +8,22 @@ const User = require('../models/User');
 const TransactionLocal = require('../models/TransactionLocal');
 const TokenConfirmTransacion = require('../models/TokenConfirmTransaction');
 const sendConfirmTransaction = require('../common/mailSender').sendConfigTransaction;
-const { KHOI_TAO, DANG_XU_LY } = require('../common/statusTransaction');
+const { KHOI_TAO, DANG_XU_LY, HOAN_THANH } = require('../common/statusTransaction');
 const Utils = require('../common/Utils');
+const validateTransacton = require('../validation/validateTransaction').default;
 
 
 module.exports.requestCreateTransaction = function (req, res) {
     const sendValue = parseInt(req.body.value) ;
     const receiverAddress = req.body.receiverAddress;
 
+    // Validate Transaction
+    const { errors, isValid } = validateTransacton(req.body);
+    if(!isValid) return res.status(400).json(errors);
+
     User.findOne({_id: req.user._id}).then(user => {
         const remainWallet = user.realableWallet - user.lockedWallet;
-        if(remainWallet < sendValue) return res.status(400).json({msg: "Không đủ số dư"});
+        if(remainWallet < sendValue) return res.status(400).json({error: "Không đủ số dư"});
 
         User.findOne({address: receiverAddress}).then(receiveUser => {
             let isLocal = false;
@@ -43,7 +48,7 @@ module.exports.requestCreateTransaction = function (req, res) {
                 })
             } else {
                 Utils.isEnoughOutputForTransaction(sendValue).then(isEnough => {
-                    if(!isEnough) res.status(406).json({msg: "Bạn vui lòng đợi giao dịch trước xử lý xong"});
+                    if(!isEnough) res.status(406).json({error: "Bạn vui lòng đợi giao dịch trước xử lý xong"});
 
                     tokenConfirm.save().then(transLocal.save().then(sendConfirmTransaction(user, tokenConfirm).then(()=> {
                         return res.sendStatus(200);
@@ -69,31 +74,38 @@ module.exports.createTransaction = function(req, res) {
     };
 
     TokenConfirmTransacion.findOne({token: token}).populate(populateOption).then((tokenConfirm) => {
-        if(tokenConfirm === null) return res.status(400).json({msg: "Không tìm thấy token"});
+        if(tokenConfirm === null) return res.status(400).json({error: "Không tìm thấy token"});
+        if(tokenConfirm._transId === null) return res.status(400).json({error: "Không tìm thấy giao dịch"});
 
-        const transLocal = tokenConfirm._transId;
+        if(tokenConfirm._transId.status !== KHOI_TAO) return res.status(400).json({ error: "Giao dịch đã được xử lý" });
+
+        let transLocal = tokenConfirm._transId;
         const foundUser = transLocal._userId;
         const sendValue = transLocal.value;
         const receiverAddress = transLocal.receiverAddress;
         const lockScriptUser = 'ADD ' + foundUser.key.address;
         const isLocal = transLocal.isLocal;
 
-        if (!isLocal) {
-
-            foundUser.realableWallet -= sendValue;
-            foundUser.save().catch(err => {
-                console.log(err);
-            });
-
+        if (isLocal) {
             User.findOne({address: receiverAddress}).then(receiveUser => {
                 if (receiveUser === null) {
                     return res.sendStatus(404);
                 }
+                // Cap nhat lai so tien nguoi gui va nhan
+                foundUser.realableWallet -= sendValue;
                 receiveUser.realableWallet += sendValue;
-                receiveUser.save().catch(err => {
+
+                // Cap nhat trang thai giao dich
+                transLocal.status = HOAN_THANH;
+
+                saveLocalTransactionToLog(transLocal);
+
+                foundUser.save().then(receiveUser.save().then(transLocal.save().then(() => {
+                    return res.sendStatus(200);
+                }))).catch(err => {
                     console.log(err);
+                    return res.sendStatus(500);
                 });
-                return res.sendStatus(200);
             }).catch(err => {
                 return res.sendStatus(500);
             });
@@ -134,7 +146,7 @@ module.exports.createTransaction = function(req, res) {
                             referencedOutputIndex: output.index,
                             unlockScript: ''
                         });
-                        if (count >= sendValue) {
+                        if (count > sendValue) {
                             return false;
                         }
                     });
@@ -158,8 +170,6 @@ module.exports.createTransaction = function(req, res) {
                     //  Ky ten len transaction
                     Utils.createInputUnlockScript(newTransaction, keys);
 
-                    console.log(newTransaction);
-
                     //  Tao option gui request
                     const option = {
                         method: 'POST',
@@ -179,6 +189,8 @@ module.exports.createTransaction = function(req, res) {
                         transLocal.referencedOutputHash = transUnConfirm.hash;
                         transLocal.referencedOutputIndex = 1;
 
+                        saveSendTransactionToLog(transLocal);
+
                         foundUser.save().then(transLocal.save().then(() => {
                             return res.sendStatus(200);
                         }));
@@ -186,8 +198,6 @@ module.exports.createTransaction = function(req, res) {
                         console.log(err);
                         return res.sendStatus(400);
                     });
-
-                    // return res.sendStatus(200);
                 });
 
                 // forEach(outputNonUsingList, output => {
@@ -248,4 +258,46 @@ module.exports.createTransaction = function(req, res) {
             })
         }
     });
+};
+
+module.exports.getInfoTransaction = function (req, res) {
+    const ref = req.params.ref;
+    TransactionLocal.findOne({ _id: ref }).then(transLocal => {
+        return res.status(200).json({
+            ref: transLocal._id,
+            value: transLocal.value,
+            createAt: transLocal.createdAt,
+            receiverAddress: transLocal.receiverAddress,
+            referencedOutputHash: transLocal.referencedOutputHash,
+            referencedOutputIndex: transLocal.referencedOutputIndex,
+            status: transLocal.status
+        })
+    }).catch(err => {
+        return res.sendStatus(500);
+    })
+};
+
+module.exports.deleteTransaction = function (req, res) {
+    const ref = req.params.ref;
+    TransactionLocal.findOne({ _id: ref }).then(transLocal => {
+        if(transLocal === null) {
+            return res.status(400).json({error: "Không tìm thấy giao dịch"});
+        }
+        if(transLocal.status !== KHOI_TAO) {
+            return res.status(400).json({error: "Không được hủy giao dịch đã xác nhận"});
+        }
+        if(transLocal._userId.toString() !== req.user._id) {
+            console.log(transLocal._userId);
+            return res.sendStatus(403);
+        }
+
+        transLocal.remove().then(() => {
+            return res.sendStatus(200);
+        }).catch(err => {
+            return res.sendStatus(500);
+        })
+    }).catch(err => {
+        console.log(err);
+        return res.sendStatus(500);
+    })
 };

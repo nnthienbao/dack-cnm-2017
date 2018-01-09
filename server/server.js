@@ -10,13 +10,15 @@ const secret = require('./secret.json').jwtSecret;
 const authentication = require('./routers/api/authentication');
 const user = require('./routers/api/user');
 const transaction = require('./routers/api/transaction');
+const history = require('./routers/api/history');
 const admin = require('./routers/api/admin');
 
 const fetchDataFromKcoin= require('./sync-with-kcoin/synchronizeWithKcoin ').fetchDataFromKcoin;
 
 mongoose.connect(config.connectionStringMongo);
 
-// require('./socket/startSocket');
+require('./socket/startSocket');
+require('./loggerConfig');
 fetchDataFromKcoin();
 
 const app = express();
@@ -40,7 +42,7 @@ app.use('/api', authentication);
 app.use('/api/user', user);
 app.use('/api/transaction', transaction);
 app.use('/api/admin', admin);
-
+app.use('/api/history', history);
 
 app.listen(8080, function () {
     console.log("Server run at port 8080");

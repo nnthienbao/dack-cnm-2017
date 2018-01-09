@@ -1,14 +1,22 @@
-const React = require('react');
+import React from 'react';
+import moment from 'moment';
 
 const DetailTransaction = (props) => {
+    const { ref, value, createAt, receiverAddress,
+        referencedOutputHash, referencedOutputIndex, status } = props.trans;
+    const { onCancelTrans, errors } = props;
     return (
         <div>
             <header className="page-header">
                 <div className="container-fluid">
-                    <h2 className="no-margin-bottom">Chi tiết giao dịch 5a514a374e1d8d325040e8f8</h2>
+                    <h2 className="no-margin-bottom">Chi tiết giao dịch {ref}</h2>
                 </div>
             </header>
-
+            { errors.error &&
+            <div className="alert alert-danger">
+                {errors.error}
+            </div>
+            }
             <section className="tables">
                 <div className="container-fluid">
                     <div className="row">
@@ -19,24 +27,33 @@ const DetailTransaction = (props) => {
                                         <tbody>
                                         <tr>
                                             <td>Tham chiếu giao dịch</td>
-                                            <td>5a514a374e1d8d325040e8f8</td>
+                                            <td>{ref}</td>
                                         </tr>
                                         <tr>
-                                            <td>referencedOutputHash</td>
-                                            <td>00000000000000000000000000000000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>referencedOutputIndex</td>
-                                            <td>1</td>
+                                            <td>Số lượng</td>
+                                            <td>{value}</td>
                                         </tr>
                                         <tr>
                                             <td>Địa chỉ nhận</td>
-                                            <td>e813260dc0015f9bc91abd9fc3e3bd1e3120d9540d70df3b512a3ce89cefb4f3</td>
+                                            <td>{receiverAddress}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>referencedOutputHash</td>
+                                            <td>{referencedOutputHash}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>referencedOutputIndex</td>
+                                            <td>{referencedOutputIndex}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ngày tạo</td>
+                                            <td>{moment(createAt).format("DD/MM/YYYY hh:mm:ss")}</td>
                                         </tr>
                                         <tr>
                                             <td>Trạng thái</td>
                                             <td>
-                                                Khởi tạo <a href="#" className="badge-pill badge-danger">Hủy</a>
+                                                {status}
+                                                {status === "Khởi tạo" && <a style={{marginLeft:4, padding:6}} onClick={() => onCancelTrans(ref)} href="#" className="badge badge-danger">Hủy</a>}
                                             </td>
                                         </tr>
                                         </tbody>

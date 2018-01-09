@@ -1,7 +1,16 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import moment from 'moment';
 
 const RechargeHistory = (props) => {
+    const { listTrans } = props;
+    const listTransView = listTrans.map((trans, key) => (
+        <tr key={key}>
+            <td className="text-center"><NavLink trans={trans} to={`/dashboard/transaction/detail/${trans.ref}`}>{trans.ref}</NavLink></td>
+            <td className="text-center">{ moment(trans.createAt).format("DD/MM/YYYY hh:mm:ss") }</td>
+            <td className="text-center">{trans.value}</td>
+        </tr>
+    ));
     return (
         <div>
             <header className="page-header">
@@ -24,11 +33,9 @@ const RechargeHistory = (props) => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td className="text-center"><NavLink to={`/dashboard/transaction/detail/${"abc"}`}>5a514a374e1d8d325040e8f8</NavLink></td>
-                                        <td className="text-center">2018-01-07 05:14:16.073</td>
-                                        <td className="text-center">300</td>
-                                    </tr>
+                                    {
+                                        listTransView
+                                    }
                                     </tbody>
                                 </table>
                             </div>

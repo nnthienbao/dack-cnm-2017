@@ -3,19 +3,29 @@ const Router = express.Router();
 
 const adminController = require('../../controllers/adminController');
 
-Router.get('/statistic', (req, res) => {
+const adminRequired = function (req, res, next) {
+    if(!req.user) {
+        return res.sendStatus(403);
+    } else if(!req.user.isAdmin) {
+        return res.sendStatus(403);
+    }
+
+    next();
+};
+
+Router.get('/statistic', adminRequired, (req, res) => {
     adminController.getStatistics(req, res);
 });
 
-Router.get('/list/user-account', (req, res) => {
+Router.get('/list/user-account', adminRequired, (req, res) => {
     adminController.getInfoUserAccount(req, res);
 });
 
-Router.get('/list/transaction', (req, res) => {
+Router.get('/list/transaction', adminRequired, (req, res) => {
     adminController.getListTransaction(req, res);
 });
 
-Router.get('/list/address', (req, res) => {
+Router.get('/list/address', adminRequired, (req, res) => {
     adminController.getListAddress(req, res);
 });
 
