@@ -1,4 +1,5 @@
 const forEach = require('lodash').forEach;
+const mongoose = require('mongoose');
 
 const User = require('../models/User');
 const TransactionLocal = require('../models/TransactionLocal');
@@ -120,6 +121,33 @@ module.exports.getListAddress = function (req, res) {
         return Promise.all(promises).then(() => {
             return res.status(200).json(listAddress);
         });
+    }).catch(err => {
+        console.log(err);
+        return res.sendStatus(500);
+    })
+};
+
+module.exports.getInfoTransaction = function (req, res) {
+    let ref;
+    try {
+        ref = mongoose.Types.ObjectId(req.params.ref);
+    }
+    catch (e) {
+        return res.sendStatus(400);
+    }
+
+    TransactionLocal.findOne({_id: ref }).populate('_userId').then(transLocal => {
+        if(transLocal === null) return res.sendStatus(400);
+
+        return res.status(200).json({
+            ref: transLocal._id,
+            value: transLocal.value,
+            userSend: transLocal._userId.username,
+            referencedOutputHash: transLocal.referencedOutputHash,
+            referencedOutputIndex: transLocal.referencedOutputIndex,
+            receiverAddress: transLocal.receiverAddress,
+            status: transLocal.status
+        })
     }).catch(err => {
         console.log(err);
         return res.sendStatus(500);

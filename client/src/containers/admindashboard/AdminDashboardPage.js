@@ -7,11 +7,11 @@ import HeaderAdmin from "../../components/admindashboard/HeaderAdmin";
 import SidebarAdmin from "../../components/admindashboard/SidebarAdmin";
 import Footer from "../../components/dashboard/Footer";
 import { logout, userRequestGetInfo  } from '../../actions/userAction';
-import DetailTransactionAdmin from "../../components/admindashboard/DetailTransactionAdmin";
 import ListAddressAdmin from "../../components/admindashboard/ListAddressAdmin";
 import StatisticsAdminContainer from "./StatisticsAdminContainer";
 import ListUsersAdminContainer from "./ListUsersAdminContainer";
 import ListTransactionAdminContainer from "./ListTransactionAdminContainer";
+import DetailTransactionAdminContainer from "./DetailTransactionAdminContainer";
 
 class AdminDashboardPage extends React.Component {
     constructor(props) {
@@ -36,7 +36,7 @@ class AdminDashboardPage extends React.Component {
                         <Route path={`${match.url}/statistics`} component={StatisticsAdminContainer}/>
                         <Route path={`${match.url}/users`} component={ListUsersAdminContainer}/>
                         <Route exact path={`${match.url}/transactions`} component={ListTransactionAdminContainer}/>
-                        <Route exact path={`${match.url}/transactions/detail`} component={DetailTransactionAdmin}/>
+                        <Route exact path={`${match.url}/transactions/detail/:ref`} component={DetailTransactionAdminContainer}/>
                         <Route path={`${match.url}/address`} component={ListAddressAdmin}/>
                         {/*Page Footer*/}
                         <Footer/>

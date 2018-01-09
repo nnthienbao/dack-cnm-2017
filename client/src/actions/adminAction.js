@@ -17,3 +17,9 @@ export function adminRequestGetListTransactionHistory(page, limit) {
         return axios.get(`/api/admin/list/transaction?page=${page}&limit=${limit}`);
     }
 }
+
+export function adminGetInfoTransaction(ref) {
+    return dispatch => {
+        return axios.get(`/api/admin/transaction/${ref}`);
+    }
+}

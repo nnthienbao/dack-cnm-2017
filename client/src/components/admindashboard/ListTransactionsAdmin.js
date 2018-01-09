@@ -6,7 +6,7 @@ const ListTransactionsAdmin = (props) => {
     const {listTrans, totalPage, onPageChange} = props;
     const listTransViews = listTrans.map((trans, key) => (
         <tr key={key}>
-            <td className="text-center"><Link to={`/admin-dashboard/transactions/detail`}>{trans.ref}</Link></td>
+            <td className="text-center"><Link to={`/admin-dashboard/transactions/detail/${trans.ref}`}>{trans.ref}</Link></td>
             <td className="text-center">{trans.username}</td>
             <td className="text-center">{trans.value}</td>
             <td className="text-center">{trans.status}</td>
