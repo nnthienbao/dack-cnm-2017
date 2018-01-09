@@ -2,6 +2,15 @@ import React from 'react';
 import ReactPaginate from 'react-paginate';
 
 const ListAddressAdmin = (props) => {
+    const { listAddress, totalPage, onPageChange } = props;
+    const listAddressView = listAddress.map((address, key) => (
+        <tr key={key}>
+            <td className="text-center">{address.address}</td>
+            <td className="text-center">{address.username}</td>
+            <td className="text-center">{address.coin.realable}</td>
+            <td className="text-center">{address.coin.available}</td>
+        </tr>
+    ))
     return (
         <div>
             <header className="page-header">
@@ -26,24 +35,9 @@ const ListAddressAdmin = (props) => {
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td className="text-center">e813260dc0015f9bc91abd9fc3e3bd1e3120d9540d70df3b512a3ce89cefb4f3</td>
-                                            <td className="text-center">nnthienbao</td>
-                                            <td className="text-center">200</td>
-                                            <td className="text-center">150</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="text-center">e813260dc0015f9bc91abd9fc3e3bd1e3120d9540d70df3b512a3ce89cefb4f3</td>
-                                            <td className="text-center">nnthienbao</td>
-                                            <td className="text-center">200</td>
-                                            <td className="text-center">150</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="text-center">e813260dc0015f9bc91abd9fc3e3bd1e3120d9540d70df3b512a3ce89cefb4f3</td>
-                                            <td className="text-center">nnthienbao</td>
-                                            <td className="text-center">200</td>
-                                            <td className="text-center">150</td>
-                                        </tr>
+                                        {
+                                            listAddressView
+                                        }
                                         </tbody>
                                     </table>
 
@@ -52,7 +46,7 @@ const ListAddressAdmin = (props) => {
                                         nextLabel={"next"}
                                         breakLabel={"..."}
                                         breakClassName={"break-me"}
-                                        pageCount={10}
+                                        pageCount={totalPage}
                                         marginPagesDisplayed={2}
                                         pageRangeDisplayed={4}
                                         containerClassName={"pagination justify-content-center"}
@@ -63,6 +57,8 @@ const ListAddressAdmin = (props) => {
                                         nextLinkClassName={"page-link"}
                                         previousClassName={"page-item"}
                                         activeClassName={"active"}
+                                        onPageChange={onPageChange}
+                                        hrefBuilder={() => (<a href="#"/>)}
                                     />
                                 </div>
                             </div>

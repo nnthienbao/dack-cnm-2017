@@ -23,3 +23,9 @@ export function adminGetInfoTransaction(ref) {
         return axios.get(`/api/admin/transaction/${ref}`);
     }
 }
+
+export function adminRequestGetListAddress(page, limit) {
+    return dispatch => {
+        return axios.get(`/api/admin/list/address?page=${page}&limit=${limit}`);
+    }
+}

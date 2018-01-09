@@ -1,4 +1,4 @@
-const forEach = require('lodash').forEach;
+const {forEach, orderBy} = require('lodash');
 const mongoose = require('mongoose');
 
 const User = require('../models/User');
@@ -97,7 +97,7 @@ module.exports.getListTransaction = function (req, res) {
 module.exports.getListAddress = function (req, res) {
     let limit = parseInt(req.query.limit);
     if(limit > MAX_LIMIT) limit = MAX_LIMIT;
-    let page = parseInt(req.query.limit);
+    let page = parseInt(req.query.page);
 
     const option = {
         limit: limit,
@@ -105,21 +105,25 @@ module.exports.getListAddress = function (req, res) {
     };
 
     let listAddress = [];
-    User.find({}, {}, option).then(listUser => {
-        let promises = [];
-        forEach(listUser, user => {
-            promises.push(
-                Utils.getCoinByAddress(user.address).then(coin => {
-                    listAddress.push({
-                        address: user.address,
-                        username: user.username,
-                        coin: coin
+    User.find({isAdmin: undefined}, {}, option).then(listUser => {
+        User.count({isAdmin: undefined}).then(totalItem => {
+            let promises = [];
+            forEach(listUser, user => {
+                promises.push(
+                    Utils.getCoinByAddress(user.address).then(coin => {
+                        listAddress.push({
+                            address: user.address,
+                            username: user.username,
+                            coin: coin
+                        })
                     })
-                })
-            );
-        });
-        return Promise.all(promises).then(() => {
-            return res.status(200).json(listAddress);
+                );
+            });
+            return Promise.all(promises).then(() => {
+                listAddress = orderBy(listAddress, ['coin.realable'], 'desc');
+
+                return res.header('total-item', totalItem).status(200).json(listAddress);
+            });
         });
     }).catch(err => {
         console.log(err);
