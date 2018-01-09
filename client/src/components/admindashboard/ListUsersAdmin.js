@@ -59,6 +59,7 @@ const ListUsersAdmin = (props) => {
                                             previousClassName={"page-item"}
                                             activeClassName={"active"}
                                             onPageChange={onPageChange}
+                                            hrefBuilder={()=> { return (<a href="#"/>) }}
                                         />
                                     </div>
                                 </div>

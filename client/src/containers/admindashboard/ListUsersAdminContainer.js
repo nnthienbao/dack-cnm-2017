@@ -9,7 +9,7 @@ class ListUsersAdminContainer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            limit: 10,
+            limit: 1,
             totalItem: 0,
             listUsers: []
         };
