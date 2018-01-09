@@ -7,8 +7,6 @@ const SidebarAdmin = (props) => {
             {/*Sidebar Header*/}
             <div className="sidebar-header d-flex align-items-center">
                 <div className="title">
-                    <h1 className="h4">Thiên Bảo</h1>
-                    <p>Admin</p>
                 </div>
             </div>
             {/*Sidebar Navidation Menus*/}
