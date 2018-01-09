@@ -76,6 +76,14 @@ export function userRequestGetInfo() {
     }
 }
 
+export function userRequestTransaction(data) {
+    return dispatch => {
+        return axios.post('/api/transaction/request', data).then(res => {
+            console.log(res);
+        })
+    }
+}
+
 
 
 

@@ -12,6 +12,7 @@ import WalletContainer from "./WalletContainer";
 import WithDrawHitory from "../../components/dashboard/WithDrawHistory";
 import RechargeHistory from "../../components/dashboard/RechargeHistory";
 import DetailTransaction from "../../components/dashboard/DetailTransaction";
+import WithdrawContainer from "./WithdrawContainer";
 
 class DashboardPage extends React.Component {
     constructor(props) {
@@ -35,7 +36,7 @@ class DashboardPage extends React.Component {
                         {/*Page Header*/}
                         <Route exact path={`${match.url}`} render={() => <Redirect to="/dashboard/wallet"/>}/>
                         <Route path={`${match.url}/wallet`} component={WalletContainer}/>
-                        <Route exact path={`${match.url}/withdraw`} component={Withdraw}/>
+                        <Route exact path={`${match.url}/withdraw`} component={WithdrawContainer}/>
                         <Route path={`${match.url}/history/withdraw`} component={WithDrawHitory}/>
                         <Route path={`${match.url}/history/recharge`} component={RechargeHistory}/>
                         <Route path={`${match.url}/transaction/detail`} component={DetailTransaction}/>
