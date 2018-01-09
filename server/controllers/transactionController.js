@@ -74,6 +74,8 @@ module.exports.createTransaction = function(req, res) {
 
     TokenConfirmTransacion.findOne({token: token}).populate(populateOption).then((tokenConfirm) => {
         if(tokenConfirm === null) return res.status(400).json({error: "Không tìm thấy token"});
+        if(tokenConfirm._transId === null) return res.status(400).json({error: "Không tìm thấy giao dịch"});
+
         if(tokenConfirm._transId.status !== KHOI_TAO) return res.status(400).json({ error: "Giao dịch đã được xử lý" });
 
         const transLocal = tokenConfirm._transId;
