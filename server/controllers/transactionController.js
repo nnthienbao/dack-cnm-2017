@@ -1,5 +1,6 @@
 const request = require('request-promise');
 const forEach = require('lodash').forEach;
+const { saveSendTransactionToLog, saveLocalTransactionToLog} = require('../log/saveLogTransaction');
 
 // const InputTransaction = require('../models/InputTransaction');
 // const OutputTransaction = require('../models/OuputTransaction');
@@ -78,7 +79,7 @@ module.exports.createTransaction = function(req, res) {
 
         if(tokenConfirm._transId.status !== KHOI_TAO) return res.status(400).json({ error: "Giao dịch đã được xử lý" });
 
-        const transLocal = tokenConfirm._transId;
+        let transLocal = tokenConfirm._transId;
         const foundUser = transLocal._userId;
         const sendValue = transLocal.value;
         const receiverAddress = transLocal.receiverAddress;
@@ -96,6 +97,8 @@ module.exports.createTransaction = function(req, res) {
 
                 // Cap nhat trang thai giao dich
                 transLocal.status = HOAN_THANH;
+
+                saveLocalTransactionToLog(transLocal);
 
                 foundUser.save().then(receiveUser.save().then(transLocal.save().then(() => {
                     return res.sendStatus(200);
@@ -167,8 +170,6 @@ module.exports.createTransaction = function(req, res) {
                     //  Ky ten len transaction
                     Utils.createInputUnlockScript(newTransaction, keys);
 
-                    console.log(newTransaction);
-
                     //  Tao option gui request
                     const option = {
                         method: 'POST',
@@ -188,6 +189,8 @@ module.exports.createTransaction = function(req, res) {
                         transLocal.referencedOutputHash = transUnConfirm.hash;
                         transLocal.referencedOutputIndex = 1;
 
+                        saveSendTransactionToLog(transLocal);
+
                         foundUser.save().then(transLocal.save().then(() => {
                             return res.sendStatus(200);
                         }));
@@ -195,8 +198,6 @@ module.exports.createTransaction = function(req, res) {
                         console.log(err);
                         return res.sendStatus(400);
                     });
-
-                    // return res.sendStatus(200);
                 });
 
                 // forEach(outputNonUsingList, output => {

@@ -5,6 +5,7 @@ const OutputTransaction = require('../models/OuputTransaction');
 const InputTransaction = require('../models/InputTransaction');
 const TransactionLocal = require('../models/TransactionLocal');
 const { HOAN_THANH } = require('../common/statusTransaction');
+const { saveReceiveTransactionToLog } = require('../log/saveLogTransaction');
 
 module.exports.executeListenedBlock = function(block) {
 
@@ -49,6 +50,8 @@ module.exports.executeListenedBlock = function(block) {
                                 referencedOutputIndex: index,
                                 isLocal: false
                             })
+
+                            saveReceiveTransactionToLog(newTransactionLocal);
 
                             newTransactionLocal.save().catch((err) => {
                                 console.log(err);
