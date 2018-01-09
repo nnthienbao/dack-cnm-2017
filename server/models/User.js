@@ -36,6 +36,9 @@ let UserSchema = new Schema({
     lockedWallet: {
         type: Number,
         default: 0
+    },
+    isAdmin: {
+        type: Boolean
     }
 });
 

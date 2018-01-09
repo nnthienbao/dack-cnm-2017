@@ -9,11 +9,17 @@ export default function (ComposedComponent) {
             if(!this.props.isAuthenticate) {
                 this.props.history.push('/login');
             }
+            if(this.props.isAdmin) {
+                this.props.history.push('/admin-dashboard');
+            }
         }
 
         componentDidUpdate(nextProps) {
             if(!nextProps.isAuthenticate) {
                 this.props.history.push('/login');
+            }
+            if(this.props.isAdmin) {
+                this.props.history.push('/admin-dashboard');
             }
         }
 
@@ -26,13 +32,15 @@ export default function (ComposedComponent) {
 
     const mapStateToProps = (state) => {
         return {
-            isAuthenticate: state.auth.isAuthenticate
+            isAuthenticate: state.auth.isAuthenticate,
+            isAdmin: state.auth.isAdmin
         }
     };
 
     Authenticate.propTypes = {
-        isAuthenticate: PropTypes.bool.isRequired
-    }
+        isAuthenticate: PropTypes.bool.isRequired,
+        isAdmin: PropTypes.bool.isRequired
+    };
 
     return connect(mapStateToProps, {})(Authenticate);
 }

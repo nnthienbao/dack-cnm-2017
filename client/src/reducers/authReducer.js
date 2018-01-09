@@ -8,6 +8,7 @@ const authReducer = (state = {
         case SET_CURRENT_USER:
             state = {
                 isAuthenticate: !isEmpty(action.user),
+                isAdmin: action.user.isAdmin,
                 user: action.user
             };
             break;

@@ -44,8 +44,11 @@ module.exports.authenticate = function (req, res) {
                     const payload = {
                         _id: user._id,
                         username: user.username,
-                        email: user.email
+                        email: user.email,
+                        isAdmin: user.isAdmin
                     };
+                    console.log(user);
+                    console.log(payload);
                     jwt.sign(payload, secret, { expiresIn: 60 * 60 }, function (err, token) {
                         if(err) return res.status(500);
                         res.status(200).json({token: 'Bearer ' + token});
