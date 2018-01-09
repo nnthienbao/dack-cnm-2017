@@ -94,6 +94,12 @@ export function userGetRechargeHistory() {
     }
 }
 
+export function userGetWithdrawHistory() {
+    return dispatch => {
+        return axios.get('/api/history/withdraw')
+    }
+}
+
 export function getInfoTransaction(ref) {
     return dispatch => {
         return axios.get(`/api/transaction/${ref}`);
