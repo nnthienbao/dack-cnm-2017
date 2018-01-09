@@ -143,7 +143,7 @@ module.exports.createTransaction = function(req, res) {
                             referencedOutputIndex: output.index,
                             unlockScript: ''
                         });
-                        if (count >= sendValue) {
+                        if (count > sendValue) {
                             return false;
                         }
                     });
