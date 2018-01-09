@@ -1,6 +1,5 @@
 const request = require('request-promise');
 const forEach = require('lodash').forEach;
-const promisesBluebird = require('bluebird');
 
 // const InputTransaction = require('../models/InputTransaction');
 // const OutputTransaction = require('../models/OuputTransaction');
@@ -10,15 +9,20 @@ const TokenConfirmTransacion = require('../models/TokenConfirmTransaction');
 const sendConfirmTransaction = require('../common/mailSender').sendConfigTransaction;
 const { KHOI_TAO, DANG_XU_LY } = require('../common/statusTransaction');
 const Utils = require('../common/Utils');
+const validateTransacton = require('../validation/validateTransaction').default;
 
 
 module.exports.requestCreateTransaction = function (req, res) {
     const sendValue = parseInt(req.body.value) ;
     const receiverAddress = req.body.receiverAddress;
 
+    // Validate Transaction
+    const { errors, isValid } = validateTransacton(req.body);
+    if(!isValid) return res.status(400).json(errors);
+
     User.findOne({_id: req.user._id}).then(user => {
         const remainWallet = user.realableWallet - user.lockedWallet;
-        if(remainWallet < sendValue) return res.status(400).json({msg: "Không đủ số dư"});
+        if(remainWallet < sendValue) return res.status(400).json({error: "Không đủ số dư"});
 
         User.findOne({address: receiverAddress}).then(receiveUser => {
             let isLocal = false;
@@ -43,7 +47,7 @@ module.exports.requestCreateTransaction = function (req, res) {
                 })
             } else {
                 Utils.isEnoughOutputForTransaction(sendValue).then(isEnough => {
-                    if(!isEnough) res.status(406).json({msg: "Bạn vui lòng đợi giao dịch trước xử lý xong"});
+                    if(!isEnough) res.status(406).json({error: "Bạn vui lòng đợi giao dịch trước xử lý xong"});
 
                     tokenConfirm.save().then(transLocal.save().then(sendConfirmTransaction(user, tokenConfirm).then(()=> {
                         return res.sendStatus(200);
