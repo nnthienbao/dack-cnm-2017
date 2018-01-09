@@ -1,5 +1,6 @@
 const request = require('request-promise');
 const forEach = require('lodash').forEach;
+const promisesBluebird = require('bluebird');
 
 // const InputTransaction = require('../models/InputTransaction');
 // const OutputTransaction = require('../models/OuputTransaction');
@@ -41,7 +42,7 @@ module.exports.requestCreateTransaction = function (req, res) {
                     return res.sendStatus(500);
                 })
             } else {
-                Utils.isEnoughOutputForTransaction(sendValue, user.key.address).then(isEnough => {
+                Utils.isEnoughOutputForTransaction(sendValue).then(isEnough => {
                     if(!isEnough) res.status(406).json({msg: "Bạn vui lòng đợi giao dịch trước xử lý xong"});
 
                     tokenConfirm.save().then(transLocal.save().then(sendConfirmTransaction(user, tokenConfirm).then(()=> {
@@ -77,7 +78,7 @@ module.exports.createTransaction = function(req, res) {
         const lockScriptUser = 'ADD ' + foundUser.key.address;
         const isLocal = transLocal.isLocal;
 
-        if (isLocal) {
+        if (!isLocal) {
 
             foundUser.realableWallet -= sendValue;
             foundUser.save().catch(err => {
@@ -98,8 +99,8 @@ module.exports.createTransaction = function(req, res) {
             });
         }
         else {
-
-            Utils.searchOutputNonUsingList(lockScriptUser).then((outputNonUsingList) => {
+            //  lay danh sach tat ca cac output phu hop de lam input
+            Utils.searchOutputNonUsingList().then((outputNonUsingList) => {
 
                 let newTransaction = {
                     version: 1,
@@ -110,60 +111,141 @@ module.exports.createTransaction = function(req, res) {
                 let count = 0;
                 let keys = [];
 
+                let promises = []
+
+                //  tu danh sach output lay ra key tuong ung (luc nay key chua duoc xap sep)
                 forEach(outputNonUsingList, output => {
-                    count += output.value;
-                    newTransaction.inputs.push({
-                        referencedOutputHash: output.hash_transaction,
-                        referencedOutputIndex: output.index,
-                        unlockScript: ''
-                    });
-                    keys.push(foundUser.key);
-                    if (count >= sendValue) {
-                        return false;
-                    }
-                });
-
-                let remainCoin = count - sendValue;
-
-                if(remainCoin > 0) {
-                    newTransaction.outputs.push({
-                        value: remainCoin,
-                        lockScript: lockScriptUser
-                    });
-                }
-
-                newTransaction.outputs.push({
-                    value: sendValue,
-                    lockScript: 'ADD ' + receiveAddress
-                });
-
-                Utils.createInputUnlockScript(newTransaction, keys);
-
-                const option = {
-                    method: 'POST',
-                    uri: 'https://api.kcoin.club/transactions',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: newTransaction,
-                    json: true
-                };
-                request(option).then(function(transUnConfirm) {
-                    // Cap nhat so du
-                    foundUser.lockedWallet += sendValue;
-                    // Cap nhat trang thai giao dich
-                    transLocal.status = DANG_XU_LY;
-                    transLocal.referencedOutputHash = transUnConfirm.hash;
-                    transLocal.referencedOutputIndex = 1;
-
-                    foundUser.save().then(transLocal.save().then(() => {
-                        return res.sendStatus(200);
+                    promises.push(Utils.findKeyByOutput(output).then(key => {
+                        keys.push(key);
                     }));
-                }).catch(function(err) {
-                    console.log(err);
-                    return res.sendStatus(400);
+                })
+
+                //  Chay promise lay key
+                Promise.all(promises).then(() => {
+
+                    //  Sap xep lai key theo thu tu phu hop voi output de co the tao chu ky
+                    keys = Utils.sortKey(outputNonUsingList, keys);
+
+                    //  Tao input cho transaction
+                    forEach(outputNonUsingList, output => {
+                        count += output.value;
+                        newTransaction.inputs.push({
+                            referencedOutputHash: output.hash_transaction,
+                            referencedOutputIndex: output.index,
+                            unlockScript: ''
+                        });
+                        if (count >= sendValue) {
+                            return false;
+                        }
+                    });
+
+                    let remainCoin = count - sendValue;
+
+                    //  Tao output dia chi nhan tien thua
+                    if(remainCoin > 0) {
+                        newTransaction.outputs.push({
+                            value: remainCoin,
+                            lockScript: lockScriptUser
+                        });
+                    }
+
+                    //  Tao output gui tien
+                    newTransaction.outputs.push({
+                        value: sendValue,
+                        lockScript: 'ADD ' + receiverAddress
+                    });
+
+                    //  Ky ten len transaction
+                    Utils.createInputUnlockScript(newTransaction, keys);
+
+                    console.log(newTransaction);
+
+                    //  Tao option gui request
+                    const option = {
+                        method: 'POST',
+                        uri: 'https://api.kcoin.club/transactions',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: newTransaction,
+                        json: true
+                    };
+                    //  Gui request den api.kcoin.club
+                    request(option).then(function(transUnConfirm) {
+                        // Cap nhat so du
+                        foundUser.lockedWallet += sendValue;
+                        // Cap nhat trang thai giao dich
+                        transLocal.status = DANG_XU_LY;
+                        transLocal.referencedOutputHash = transUnConfirm.hash;
+                        transLocal.referencedOutputIndex = 1;
+
+                        foundUser.save().then(transLocal.save().then(() => {
+                            return res.sendStatus(200);
+                        }));
+                    }).catch(function(err) {
+                        console.log(err);
+                        return res.sendStatus(400);
+                    });
+
+                    // return res.sendStatus(200);
                 });
-            });
+
+                // forEach(outputNonUsingList, output => {
+                //     count += output.value;
+                //     newTransaction.inputs.push({
+                //         referencedOutputHash: output.hash_transaction,
+                //         referencedOutputIndex: output.index,
+                //         unlockScript: ''
+                //     });
+                //     keys.push(foundUser.key);
+                //     if (count >= sendValue) {
+                //         return false;
+                //     }
+                // });
+                //
+                // let remainCoin = count - sendValue;
+                //
+                // if(remainCoin > 0) {
+                //     newTransaction.outputs.push({
+                //         value: remainCoin,
+                //         lockScript: lockScriptUser
+                //     });
+                // }
+                //
+                // newTransaction.outputs.push({
+                //     value: sendValue,
+                //     lockScript: 'ADD ' + receiverAddress
+                // });
+                //
+                // Utils.createInputUnlockScript(newTransaction, keys);
+                //
+                // const option = {
+                //     method: 'POST',
+                //     uri: 'https://api.kcoin.club/transactions',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: newTransaction,
+                //     json: true
+                // };
+                // request(option).then(function(transUnConfirm) {
+                //     // Cap nhat so du
+                //     foundUser.lockedWallet += sendValue;
+                //     // Cap nhat trang thai giao dich
+                //     transLocal.status = DANG_XU_LY;
+                //     transLocal.referencedOutputHash = transUnConfirm.hash;
+                //     transLocal.referencedOutputIndex = 1;
+                //
+                //     foundUser.save().then(transLocal.save().then(() => {
+                //         return res.sendStatus(200);
+                //     }));
+                // }).catch(function(err) {
+                //     console.log(err);
+                //     return res.sendStatus(400);
+                // });
+                //
+                // return res.sendStatus(200);
+            })
         }
     });
 };
